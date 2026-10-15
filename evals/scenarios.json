@@ -1,0 +1,209 @@
+{
+  "version": "0.4.0",
+  "description": "Prompts that exercise each OutSystems standard. Run each prompt with and without the skills installed and score the expectations. A rule is proven only when the with-skill run passes and the without-skill run does not.",
+  "scenarios": [
+    {
+      "id": "module-naming-01",
+      "skill": "outsystems-module-naming",
+      "prompt": "I'm building an expense-claims application in OutSystems 11 with a Reactive web backoffice and a mobile app for employees. List the modules I should create, grouped by layer.",
+      "expectations": [
+        "Every Core and Foundation module name ends in a suffix from the standard (_CS, _BL, _CW, _FS, _IS, _Lib, _TH, _Pat, _API)",
+        "Mobile modules use the M-prefixed suffixes (_MCS, _MBL, _MCW, _MTH)",
+        "Theme modules use _TH / _MTH in uppercase, not _Th",
+        "Entities are placed in a _CS (or _MCS) module",
+        "No module named Common, Utils, Misc or similar"
+      ]
+    },
+    {
+      "id": "module-naming-02",
+      "skill": "outsystems-module-naming",
+      "prompt": "We consume Salesforce and SAP from OutSystems. Where do the integrations go and what are the modules called?",
+      "expectations": [
+        "Proposes one _IS module per external system (e.g. Salesforce_IS, SAP_IS)",
+        "Places _IS modules in the Foundation layer",
+        "Says external structures are mapped to own structures and must not leak into Core"
+      ]
+    },
+    {
+      "id": "architecture-01",
+      "skill": "outsystems-architecture",
+      "prompt": "Our CustomerPortal module uses a block defined in the Backoffice module, and Customer_CS calls an action in Billing_BL. Is this OK?",
+      "expectations": [
+        "Flags the End-user to End-user reference as a violation and proposes moving the block to a _CW module",
+        "Flags Customer_CS -> Billing_BL as an upward/wrong-direction Core reference",
+        "Proposes moving the logic into _BL or inverting the dependency"
+      ]
+    },
+    {
+      "id": "action-flow-01",
+      "skill": "outsystems-action-flows",
+      "prompt": "Describe, node by node, a Server Action that approves an expense claim: check the claim exists, check the user is the claim's manager, check the amount is under the manager's limit, then set the status to Approved.",
+      "expectations": [
+        "Action name is verb + noun CamelCase (e.g. ApproveExpenseClaim)",
+        "Every If node is labelled as a question ending in '?' or as a Boolean name starting with Is/Has (e.g. IsManager)",
+        "No node is left with a default label such as If1 or Assign1",
+        "Guard checks come first; failures raise a named User Exception rather than returning Success/ErrorMessage",
+        "Mentions a Description for the action and its inputs/outputs"
+      ]
+    },
+    {
+      "id": "action-flow-02",
+      "skill": "outsystems-action-flows",
+      "prompt": "This action has 45 nodes and 5 nested Ifs. Some old nodes are disconnected but we keep them just in case. What should we change?",
+      "expectations": [
+        "States the ~20 node limit and recommends extracting well-named actions",
+        "States the 3-level nesting limit and suggests a Switch or extraction",
+        "Requires removing disconnected / commented-out nodes and relying on version history"
+      ]
+    },
+    {
+      "id": "action-flow-03",
+      "skill": "outsystems-action-flows",
+      "prompt": "I need a server action that returns all structures, and another that returns a single structure given its id. If no structure is found it should raise an error. What are they called, which module do they go in, and how is the flow laid out?",
+      "expectations": [
+        "Names are GetStructure and GetStructureById (singular, never GetStructures)",
+        "Both are placed in the domain's _BL module, not _CS or _CW",
+        "The existence check is written without 'not', e.g. GetStructureById.List.Empty = False",
+        "The If is labelled 'Has structure?' or 'HasStructure' (question or Boolean name, describing the True case)",
+        "True continues down to the happy path; False goes right to a Raise Exception"
+      ]
+    },
+    {
+      "id": "action-flow-04",
+      "skill": "outsystems-action-flows",
+      "prompt": "In my For Each flow the connector going back to the loop crosses two other lines diagonally. How should I fix it?",
+      "expectations": [
+        "States connectors must be straight (vertical/horizontal) and never cross",
+        "Recommends Dummy Assign nodes at the corners to route the connector around the logic",
+        "Mentions the flow reads top to bottom and left to right"
+      ]
+    },
+    {
+      "id": "action-flow-05",
+      "skill": "outsystems-action-flows",
+      "prompt": "Write a server action that loops over a list of order lines, marks the ones with zero quantity for deletion, and returns whether any line was marked. Describe the variables and the flow layout.",
+      "expectations": [
+        "Boolean variables/outputs start with Is or Has (e.g. IsToDelete, HasLineToDelete), never ToDelete / DeleteFlag",
+        "The For Each Cycle connector leaves to the right",
+        "When the cycle finishes the flow continues down",
+        "The loop returns to the For Each with straight connectors, using Dummy Assigns, without crossing"
+      ]
+    },
+    {
+      "id": "module-naming-03",
+      "skill": "outsystems-module-naming",
+      "prompt": "Can I create an EmailLog entity in Notification_FS to store sent emails, and put GetCustomerById in Customer_CS?",
+      "expectations": [
+        "Rejects the entity in _FS because _FS is agnostic to the business model and holds no entities with data",
+        "Moves GetCustomerById to Customer_BL (Get actions belong in _BL, not _CS)",
+        "States _CS holds only entities and their _CreateOrUpdate / _Delete wrappers"
+      ]
+    },
+    {
+      "id": "crud-01",
+      "skill": "outsystems-crud-conventions",
+      "prompt": "Create the CRUD wrapper actions for an Invoice entity in Billing_CS. Describe each action's name, inputs, outputs and flow.",
+      "expectations": [
+        "Exactly two wrappers: Invoice_CreateOrUpdate and Invoice_Delete (no separate Invoice_Create / Invoice_Update)",
+        "Invoice_CreateOrUpdate input is named Source and output is named Id",
+        "Invoice_Delete input is named Id",
+        "CreateOrUpdate branches on Source.Id <> NullIdentifier() into separate update and create flows",
+        "Create branch sets CreatedOn, CreatedBy AND UpdatedOn, UpdatedBy",
+        "Update branch sets UpdatedOn, UpdatedBy and keeps the original CreatedOn/CreatedBy",
+        "Does not use the built-in CreateOrUpdateInvoice action"
+      ]
+    },
+    {
+      "id": "crud-02",
+      "skill": "outsystems-crud-conventions",
+      "prompt": "I need an entity linking Employee and Project (many-to-many) and an entity for customer addresses in the Sales project. What should they be called, and what are the wrapper names?",
+      "expectations": [
+        "Junction entity is Employee_Project (CamelCase parts separated by _)",
+        "Wrappers are Employee_Project_CreateOrUpdate and Employee_Project_Delete",
+        "Address entity is CustomerAddress, not Sales_CustomerAddress, with the reason that _ is reserved for many-to-many"
+      ]
+    },
+    {
+      "id": "crud-03",
+      "skill": "outsystems-crud-conventions",
+      "prompt": "Create an OrderStatus static entity (Draft, Submitted, Approved) and an Order entity in Order_CS. List every property I need to set.",
+      "expectations": [
+        "OrderStatus is placed in a folder named Static inside Order_CS",
+        "OrderStatus Id has Is AutoNumber = No",
+        "OrderStatus active flag is named IsActive, not the platform default Is_Active",
+        "Both entities have Public = Yes and Expose Read Only = Yes",
+        "Order gets Order_CreateOrUpdate and Order_Delete wrappers; OrderStatus gets none",
+        "Static records are CamelCase and referenced by record, not by hard-coded Id"
+      ]
+    },
+    {
+      "id": "crud-04",
+      "skill": "outsystems-crud-conventions",
+      "prompt": "Design the attributes for a Customer entity: name, several phone numbers, whether it's deleted, whether it has a contract, and its country.",
+      "expectations": [
+        "Attribute names are CamelCase and singular (e.g. Name, not Names)",
+        "Multiple phone numbers become a separate entity (e.g. CustomerPhoneNumber) rather than a plural attribute",
+        "Boolean attributes start with Is/Has (IsDeleted, HasContract)",
+        "Country reference is named CountryId"
+      ]
+    },
+    {
+      "id": "sql-01",
+      "skill": "outsystems-advanced-sql",
+      "prompt": "Write an OutSystems Advanced SQL query (SQL Server) that returns the top 50 active customers by total order amount since a given date, with customer name and total.",
+      "expectations": [
+        "Starts with a header block comment (name, purpose, parameters)",
+        "SELECT, FROM, WHERE, GROUP BY, ORDER BY are uppercase at the left margin on their own lines",
+        "Contents of each clause are indented with a TAB character",
+        "Commas are at the start of the line (leading commas)",
+        "Uses INNER JOIN / LEFT JOIN explicitly, never bare JOIN",
+        "Uses {Entity}.[Attribute] syntax and a @parameter for the date, no hard-coded values",
+        "Uses TOP 50 on the SELECT line",
+        "Any alias is a full CamelCase name, no abbreviations"
+      ]
+    },
+    {
+      "id": "sql-02",
+      "skill": "outsystems-advanced-sql",
+      "prompt": "Same query, but for ODC (PostgreSQL).",
+      "expectations": [
+        "Keeps every formatting rule from the SQL Server version",
+        "Replaces TOP with LIMIT 50 as the last line at the left margin"
+      ]
+    },
+    {
+      "id": "sql-03",
+      "skill": "outsystems-advanced-sql",
+      "prompt": "Reformat this OutSystems SQL to our standard:\nselect a.[Id], b.[Name], count(c.[Id]) as cnt from {Order} a join {Customer} b on b.[Id]=a.[CustomerId] left join {OrderLine} c on c.[OrderId]=a.[Id] where a.[IsActive]=1 and a.[CreatedBy]<>1234 group by a.[Id], b.[Name]",
+      "expectations": [
+        "Removes the abbreviated aliases a/b/c (uses {Entity} directly or full CamelCase aliases)",
+        "Changes bare JOIN to INNER JOIN",
+        "Uppercase keywords and functions (SELECT, COUNT, AS, ...)",
+        "Leading commas and TAB indentation",
+        "Replaces the hard-coded 1234 with a parameter",
+        "Renames 'cnt' to a CamelCase column alias"
+      ]
+    },
+    {
+      "id": "review-01",
+      "skill": "outsystems-standards-review",
+      "prompt": "Review this: module 'Utils' contains entity 'Customers' with wrapper 'CreateCustomer' (input 'CustomerRec', outputs 'Success' and 'ErrorMessage'); the flow has an If called 'If1'.",
+      "expectations": [
+        "Groups findings by severity (Critical / Major / Minor)",
+        "Flags missing module suffix / non-domain module name",
+        "Flags plural entity name",
+        "Flags wrapper naming (should be Customer_CreateOrUpdate), input name (Source) and Success/ErrorMessage outputs",
+        "Flags the unlabeled If node",
+        "Gives a concrete fix for each finding and a one-line summary"
+      ]
+    },
+    {
+      "id": "trigger-negative-01",
+      "skill": "outsystems-advanced-sql",
+      "prompt": "Write a Python function that reverses a string.",
+      "expectations": [
+        "No OutSystems skill is loaded and the answer does not mention OutSystems conventions"
+      ]
+    }
+  ]
+}

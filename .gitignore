@@ -1,0 +1,8 @@
+# OS / editor noise
+.DS_Store
+Thumbs.db
+.vscode/settings.json
+.idea/
+
+# Local eval run outputs (commit summaries to evals/results/ only when intended)
+evals/runs/
