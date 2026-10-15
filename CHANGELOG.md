@@ -2,6 +2,17 @@
 
 All notable changes to this project are documented here. Versions follow [semantic versioning](https://semver.org/).
 
+## [0.5.0] - 2026-10-15
+
+### Added
+- `outsystems-crud-conventions`: optional `<Entity>_DeleteAll` bulk delete in `_CS`, implemented as one Advanced SQL node (`DeleteAll<Entity>`), never a loop.
+- `outsystems-crud-conventions`: `Get<Entity>ForUpdate` output path is `Record.<Entity>.<Attribute>`.
+- `evals/results/2026-10-15.md`: first live test results against a real OutSystems 11 `_CS` module (static entity 8/8; entity + CRUD + bulk delete passed developer review).
+- Eval scenario `crud-05`.
+
+### Changed
+- Module naming, architecture summary, review checklist, `AGENTS.md` and README now list `_DeleteAll` as an allowed `_CS` action.
+
 ## [0.4.0] - 2026-10-15
 
 ### Changed

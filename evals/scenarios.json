@@ -1,5 +1,5 @@
 {
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Prompts that exercise each OutSystems standard. Run each prompt with and without the skills installed and score the expectations. A rule is proven only when the with-skill run passes and the without-skill run does not.",
   "scenarios": [
     {
@@ -96,7 +96,7 @@
       "expectations": [
         "Rejects the entity in _FS because _FS is agnostic to the business model and holds no entities with data",
         "Moves GetCustomerById to Customer_BL (Get actions belong in _BL, not _CS)",
-        "States _CS holds only entities and their _CreateOrUpdate / _Delete wrappers"
+        "States _CS holds only entities and their _CreateOrUpdate / _Delete (and optional _DeleteAll) wrappers"
       ]
     },
     {
@@ -145,6 +145,18 @@
         "Multiple phone numbers become a separate entity (e.g. CustomerPhoneNumber) rather than a plural attribute",
         "Boolean attributes start with Is/Has (IsDeleted, HasContract)",
         "Country reference is named CountryId"
+      ]
+    },
+    {
+      "id": "crud-05",
+      "skill": "outsystems-crud-conventions",
+      "prompt": "Our nightly sync reloads the Product table. Add an action to Product_CS that deletes every Product record before the reload, and update an existing Product's name from a record I already have.",
+      "expectations": [
+        "Bulk delete is an action named Product_DeleteAll in Product_CS",
+        "It uses one Advanced SQL node (DELETE FROM {Product}) with a header comment, not a For Each over DeleteProduct",
+        "The SQL follows the formatting standard (uppercase keywords, tab indentation)",
+        "The update goes through Product_CreateOrUpdate with input Source",
+        "If reading the existing record, the path is GetProductForUpdate.Record.Product.<Attribute>"
       ]
     },
     {

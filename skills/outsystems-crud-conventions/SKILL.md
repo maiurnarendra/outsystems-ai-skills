@@ -44,16 +44,32 @@ Writes from other modules go through the `_CS` wrappers, never through the built
 
 Entities are `Public = Yes` and exposed **read-only** from `_CS` modules. All writes go through public wrapper actions in the same `_CS`, so validation and audit logic live in one place.
 
-Every entity has exactly these two wrappers, named `<EntityName>_<Operation>`:
+Every entity has these two wrappers, plus an optional bulk delete, named `<EntityName>_<Operation>`:
 
 | Action | Wraps | Input | Output |
 |---|---|---|---|
 | `Customer_CreateOrUpdate` | `CreateCustomer` / `UpdateCustomer` | `Source` (record of `Customer`, mandatory) | `Id` (`Customer Identifier`) |
 | `Customer_Delete` | `DeleteCustomer` | `Id` (`Customer Identifier`, mandatory) | *(none)* |
+| `Customer_DeleteAll` *(optional)* | Advanced SQL bulk delete | *(none)* | *(none)* |
 
-For a many-to-many entity the full entity name is kept: `User_Role_CreateOrUpdate`, `User_Role_Delete`.
+For a many-to-many entity the full entity name is kept: `User_Role_CreateOrUpdate`, `User_Role_Delete`, `User_Role_DeleteAll`.
 
-These two wrappers are the **only** actions in a `_CS` module. Get actions (`GetCustomer`, `GetCustomerById`) belong in the `_BL` module (see `outsystems-action-flows`).
+These are the **only** actions in a `_CS` module. Get actions (`GetCustomer`, `GetCustomerById`) belong in the `_BL` module (see `outsystems-action-flows`).
+
+### `_DeleteAll` (bulk delete)
+
+Create it only when a process needs to empty the table (sync reloads, test data, purges). It uses **one Advanced SQL node**, never a For Each over `Delete<Entity>`:
+
+```sql
+/* DeleteAllCustomer
+   Deletes every Customer record in a single statement.
+   Params: none */
+DELETE FROM
+	{Customer}
+```
+
+- Action `<Entity>_DeleteAll`, SQL node `DeleteAll<Entity>`, header comment, formatting per `outsystems-advanced-sql`.
+- A filtered bulk delete adds a `WHERE` clause with parameters and keeps the same names (`Customer_DeleteAll` with a `CountryId` input, for example).
 
 Rules:
 - Do **not** create separate `_Create` / `_Update` wrappers; `_CreateOrUpdate` covers both.
@@ -94,6 +110,7 @@ Rules:
 - The check is always `Source.Id <> NullIdentifier()`, in an If labelled `Is existing record?`.
 - **On creation, `UpdatedOn` / `UpdatedBy` are set too**, with the same values as `CreatedOn` / `CreatedBy`. Log fields are never left empty.
 - On update, `CreatedOn` / `CreatedBy` must keep their original values. If `Source` may not carry them, read the record with `Get<Entity>ForUpdate` and copy them across before calling `Update<Entity>`.
+- The output of `Get<Entity>ForUpdate` is reached through the entity name: `GetCustomerForUpdate.Record.Customer.CreatedOn`, not `GetCustomerForUpdate.Record.CreatedOn` (Service Studio reports "Can't identify 'CreatedOn' element").
 - Callers never set log fields; the wrapper always overwrites them.
 - Both branches return `Id`.
 

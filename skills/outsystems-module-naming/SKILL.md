@@ -24,7 +24,7 @@ Every module name tells the reader two things: **which business domain** it belo
 | *(none)* or `_Portal` / `_Backoffice` | End-user | Screens, flows, UI for one user persona or app. Consumes Core; exposes nothing. | `_App` / `_Mobile` |
 | `_CW` | Core | **Core Widgets**: reusable business blocks (e.g. `CustomerCard`). No Get actions. | `_MCW` |
 | `_BL` | Core | **Business Logic**: Get actions (`GetStructure`, `GetStructureById`), processes, orchestration, rules spanning several entities. | `_MBL` |
-| `_CS` | Core | **Core Services**: entities (exposed read-only) and their `_CreateOrUpdate` / `_Delete` wrappers. Nothing else. | `_MCS` |
+| `_CS` | Core | **Core Services**: entities (exposed read-only) and their `_CreateOrUpdate` / `_Delete` / optional `_DeleteAll` wrappers. Nothing else. | `_MCS` |
 | `_API` | Core | Exposed REST/SOAP APIs for external consumers. No business logic, only calls `_BL`/`_CS`. | n/a |
 | `_Sync` | Core | Offline synchronisation logic for mobile. | n/a |
 | `_IS` | Foundation | **Integration Services**: wraps one external system (REST consume, SOAP, SAP, DB connection). | n/a |
@@ -41,7 +41,7 @@ Mobile variants exist because Client-side entities, Client Actions and offline s
 
 1. Entity definitions live **only** in `_CS` (or `_MCS` for local storage). Never define entities in `_BL`, `_CW` or End-user modules.
 2. A `_CS` module owns one business concept and its closely related entities (e.g. `Order` + `OrderLine`). Split when a module grows beyond one concept.
-3. **`_CS` holds only entities and their `_CreateOrUpdate` / `_Delete` wrappers.** Get actions (`GetStructure`, `GetStructureById`, `GetStructureBy<Input>`) go in **`_BL`**, never in `_CS` or `_CW`.
+3. **`_CS` holds only entities and their `_CreateOrUpdate` / `_Delete` / optional `_DeleteAll` wrappers.** Get actions (`GetStructure`, `GetStructureById`, `GetStructureBy<Input>`) go in **`_BL`**, never in `_CS` or `_CW`.
 4. Logic that coordinates more than one `_CS` belongs in `_BL`.
 5. If something has no business meaning and could be reused by another company, it belongs in Foundation (`_FS`, `_Lib`, `_IS`, `_Pat`, `_TH`).
 6. **`_FS` modules are agnostic to the business model**: they never contain entities with data and never reference Core modules. They receive everything they need through action inputs.

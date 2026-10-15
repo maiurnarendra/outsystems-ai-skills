@@ -22,7 +22,7 @@ description: Standards for OutSystems action flows (Server, Client and Service A
 | Records by one other input | `Get<Entity>By<Input>` | `GetStructureByCode`, `GetStructureByParentId` |
 
 - The entity part is **singular**, even when the action returns a list.
-- Get actions live in the **`_BL`** module of the domain. Not in `_CS` (which only holds entities and their `_CreateOrUpdate` / `_Delete` wrappers) and not in `_CW` (which holds widgets). See `outsystems-module-naming`.
+- Get actions live in the **`_BL`** module of the domain. Not in `_CS` (which only holds entities and their `_CreateOrUpdate` / `_Delete` / `_DeleteAll` wrappers) and not in `_CW` (which holds widgets). See `outsystems-module-naming`.
 - Aggregates and SQL nodes inside a flow follow the same pattern: `GetStructureById`, `GetStructureByParentId`.
 
 ## Flow layout
