@@ -1,6 +1,6 @@
 # Contributing
 
-This repository is **content, not code**: Markdown skills that teach a coding agent your OutSystems standards. There is no build and no runtime. A change is a Markdown edit, checked by a validation script and by evals.
+This repository is mostly **content, not code**: Markdown skills that teach a coding agent your OutSystems standards. There is no build. The one exception is `outsystems-lifetime-deploy`, which ships a small LifeTime API script; keep everything team-specific (URLs, people, statuses) out of it and in the user's local config. A change is a Markdown edit, checked by a validation script and by evals.
 
 ## Where rules live
 

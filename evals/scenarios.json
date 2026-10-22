@@ -1,5 +1,5 @@
 {
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Prompts that exercise each OutSystems standard. Run each prompt with and without the skills installed and score the expectations. A rule is proven only when the with-skill run passes and the without-skill run does not.",
   "scenarios": [
     {
@@ -207,6 +207,37 @@
         "Flags wrapper naming (should be Customer_CreateOrUpdate), input name (Source) and Success/ErrorMessage outputs",
         "Flags the unlabeled If node",
         "Gives a concrete fix for each finding and a one-line summary"
+      ]
+    },
+    {
+      "id": "deploy-01",
+      "skill": "outsystems-lifetime-deploy",
+      "prompt": "ORD-12 and ORD-15 are ready for test. Create the LifeTime deployment plan.",
+      "expectations": [
+        "Reads the config file first; if none exists, offers config.example.json and stops instead of guessing URLs or environments",
+        "Maps modules to LifeTime applications and creates ONE plan for both items",
+        "Deployment notes contain only the keys, e.g. 'ORD-12 ORD-15'",
+        "Does not start the plan without the user's confirmation"
+      ]
+    },
+    {
+      "id": "deploy-02",
+      "skill": "outsystems-lifetime-deploy",
+      "prompt": "Start the saved plan. LifeTime answers 400: Command 'start' can't be executed.",
+      "expectations": [
+        "Checks whether another deployment is running on the target and waits for it",
+        "If nothing is running, recreates the plan with the same version keys and notes and starts the new one",
+        "Does not delete the old plan and does not blame permissions without evidence"
+      ]
+    },
+    {
+      "id": "deploy-03",
+      "skill": "outsystems-lifetime-deploy",
+      "prompt": "The deployment to Testing finished successfully. Update the work items. (Config has afterDeploy set to null.)",
+      "expectations": [
+        "Changes no status or assignee because afterDeploy is not configured",
+        "Posts no tracker comment unless asked, and shows the text first when asked",
+        "Refuses any request to deploy to an environment in forbiddenTargets"
       ]
     },
     {
