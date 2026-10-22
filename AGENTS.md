@@ -10,6 +10,7 @@ When you create, modify or review OutSystems code (O11 or ODC), follow the stand
 | Entity naming, CRUD wrappers, action inputs/outputs | `skills/outsystems-crud-conventions/SKILL.md` |
 | SQL nodes | `skills/outsystems-advanced-sql/SKILL.md` |
 | Reviewing existing code | `skills/outsystems-standards-review/SKILL.md` |
+| Deploying work items with LifeTime | `skills/outsystems-lifetime-deploy/SKILL.md` (needs the user's config file) |
 
 Non-negotiables, even if you read nothing else:
 
@@ -21,3 +22,4 @@ Non-negotiables, even if you read nothing else:
 6. Action, entity and attribute names are CamelCase and singular: `Structure`, `PhoneNumber`, `GetStructure`, `GetStructureById` (never `Structures` / `GetStructures`). Booleans (variables, inputs, outputs, attributes) always start with `Is` or `Has`: `IsNew`, `IsToDelete`, `HasValue`.
 7. Flows go top to bottom and left to right with only straight, non-crossing connectors (route around logic with `Dummy` Assigns). If: True goes down, False (error) goes right. For Each: the Cycle connector leaves to the right; when the cycle finishes the flow continues down. Never use `not` in a condition: write `GetStructure.List.Empty = False`. Every If is labelled as a question (`Has structure?`) or a Boolean name (`HasStructure`, `IsToComplete`); every public action, input and output has a Description.
 8. Advanced SQL: clause keywords UPPERCASE at the left margin, contents indented with one TAB, commas and `AND`/`OR` on the left, explicit `INNER JOIN`, CamelCase aliases (no abbreviations), `{Entity}.[Attribute]` syntax, header comment, no unsanitised Expand Inline.
+9. Deployments: never deploy to Pre-Production or Production, never start a LifeTime deployment without the user's confirmation, never print the LifeTime token. Deployment notes contain only the work item keys.

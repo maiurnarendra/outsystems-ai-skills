@@ -1,0 +1,45 @@
+{
+  "lifetime": {
+    "url": "https://<factory>-lt.outsystemsenterprise.com",
+    "tokenEnvVar": "LIFETIME_API_TOKEN",
+    "sourceEnvironment": "Development",
+    "targetEnvironment": "Testing",
+    "forbiddenTargets": ["Pre-Production", "Production"]
+  },
+  "tracker": {
+    "type": "jira",
+    "access": "Atlassian MCP connector",
+    "site": "https://<company>.atlassian.net",
+    "readyQuery": "project = ORD AND status = \"Ready for Test\" AND assignee = currentUser()",
+    "onlyAssignedToMe": true
+  },
+  "statuses": {
+    "ready": "Ready for Test",
+    "failed": null,
+    "readyOrLater": ["Ready for Test", "In Test", "Done"]
+  },
+  "afterDeploy": {
+    "story": null,
+    "storyWithBugs": null,
+    "linkedBugs": null,
+    "bug": null,
+    "extraRules": []
+  },
+  "_examples": {
+    "afterDeploy.story": { "status": "In Test", "assignee": "<tester account id>" },
+    "afterDeploy.bug": { "status": null, "assignee": "reporter" },
+    "afterDeploy.extraRules": ["Stories reported by <account id> that failed test go to <status> and back to the reporter"],
+    "tracker (Azure DevOps)": {
+      "type": "azure-devops",
+      "access": "az boards CLI",
+      "site": "https://dev.azure.com/<org>/<project>",
+      "readyQuery": "SELECT [System.Id] FROM WorkItems WHERE [System.State] = 'Ready for Test' AND [System.AssignedTo] = @Me"
+    },
+    "tracker (GitHub)": {
+      "type": "github",
+      "access": "gh CLI",
+      "site": "<owner>/<repo>",
+      "readyQuery": "is:issue is:open label:\"ready for test\" assignee:@me"
+    }
+  }
+}

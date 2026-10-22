@@ -18,7 +18,7 @@ This repository packages a set of OutSystems development standards as **Agent Sk
 
 | Aspect | Details |
 | --- | --- |
-| **Type** | Content, not code: six Markdown skills plus instruction adapters. Nothing runs, nothing connects to your environment. |
+| **Type** | Six standards skills that are content only (Markdown, nothing runs) plus one deployment skill, `outsystems-lifetime-deploy`, that calls the LifeTime API with a small PowerShell script, only when you use it. |
 | **Platforms** | OutSystems 11 and OutSystems Developer Cloud (ODC). |
 | **Works with** | Claude Code (plugin or skill install), GitHub Copilot, Cursor, Kiro, Codex CLI. |
 | **Pairs with** | Any OutSystems MCP server: the MCP gives the agent access to your app, these skills govern what it writes. Also useful on its own for design and review conversations. |
@@ -34,6 +34,7 @@ This repository packages a set of OutSystems development standards as **Agent Sk
 | [**Entities & CRUD**](skills/outsystems-crud-conventions/SKILL.md) | Name entities in CamelCase (`CustomerAddress`), use `_` only for many-to-many (`User_Role`), and generate `Entity_CreateOrUpdate` (input `Source`, output `Id`, separate create/update branches, audit fields filled), `Entity_Delete` (input `Id`) and, when needed, an `Entity_DeleteAll` bulk delete in Advanced SQL. |
 | [**Advanced SQL**](skills/outsystems-advanced-sql/SKILL.md) | Format queries with uppercase clauses at the left margin, tab-indented contents, leading commas, explicit `INNER JOIN`, CamelCase aliases and parameters instead of hard-coded values. `TOP` for SQL Server, `LIMIT` for ODC/PostgreSQL. |
 | [**Standards review**](skills/outsystems-standards-review/SKILL.md) | Review a module, action, entity or query against all of the above and report findings by severity with a concrete fix for each. |
+| [**LifeTime deploy**](skills/outsystems-lifetime-deploy/SKILL.md) | Read the work items that are ready for test from your tracker (Jira, Azure DevOps, GitHub Issues or none), find the modules in their comments, tag the changed apps and create **one** LifeTime deployment plan with the item keys as notes. Starts it only when you confirm. Tracker, environments and any after-deploy status/assignee changes come from your own config file. |
 
 ### What you can ask
 
@@ -41,6 +42,7 @@ This repository packages a set of OutSystems development standards as **Agent Sk
 - *"Write the CreateOrUpdate and Delete wrappers for the Invoice entity."*
 - *"Write an Advanced SQL query that returns the top 50 customers by order total."*
 - *"Review the Order_CS module against our OutSystems standards."*
+- *"Create the deployment plan to Testing for my work items that are ready for test."*
 
 ## What's in this repository
 
@@ -59,7 +61,8 @@ outsystems-ai-skills/
 │  ├─ outsystems-action-flows/SKILL.md      # flows, If labels, comments, exceptions
 │  ├─ outsystems-crud-conventions/SKILL.md  # entity naming and CRUD wrappers
 │  ├─ outsystems-advanced-sql/SKILL.md      # SQL formatting and safety
-│  └─ outsystems-standards-review/SKILL.md  # review checklist and report
+│  ├─ outsystems-standards-review/SKILL.md  # review checklist and report
+│  └─ outsystems-lifetime-deploy/           # work items → LifeTime plan (SKILL.md, config.example.json, reference/, scripts/)
 ├─ evals/
 │  ├─ README.md                             # how to test the skills
 │  └─ scenarios.json                        # prompts + expected behaviour

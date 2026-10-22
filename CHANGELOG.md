@@ -2,6 +2,18 @@
 
 All notable changes to this project are documented here. Versions follow [semantic versioning](https://semver.org/).
 
+## [0.6.0] - 2026-10-22
+
+### Added
+- `outsystems-lifetime-deploy`: creates one LifeTime deployment plan from the work items that are ready for test, using the LifeTime Deployment API v2. Reads modules from the items' comments, maps them to applications, tags changed apps and uses only the item keys as deployment notes. Starts a plan only after the user confirms.
+- Tracker-agnostic: Jira, Azure DevOps, GitHub Issues or none, chosen in a local config file (`config.example.json`). People, statuses and after-deploy rules live only in that file.
+- `scripts/lifetime.ps1` (Windows PowerShell 5.1 and `pwsh`): refuses targets listed in `forbiddenTargets`, never prints the token, starts plans with `RedeployOutdated=true`, and lists deployments running on the target.
+- Handling for a refused start: wait while another deployment runs on the target; if nothing runs, recreate the stale plan with the same versions.
+- Eval scenarios `deploy-01` to `deploy-03`.
+
+### Changed
+- README, CONTRIBUTING, `AGENTS.md` and Copilot instructions mention the deployment skill; the repository is no longer "content only".
+
 ## [0.5.0] - 2026-10-15
 
 ### Added
