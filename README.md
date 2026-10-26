@@ -22,7 +22,8 @@ This repository packages a set of OutSystems development standards as **Agent Sk
 | **Platforms** | OutSystems 11 and OutSystems Developer Cloud (ODC). |
 | **Works with** | Claude Code (plugin or skill install), GitHub Copilot, Cursor, Kiro, Codex CLI. |
 | **Pairs with** | Any OutSystems MCP server: the MCP gives the agent access to your app, these skills govern what it writes. Also useful on its own for design and review conversations. |
-| **Status** | `0.1.0` — first public version. Rules are stable; wording will keep improving with feedback. |
+| **Status** | Actively maintained. See [Releases](https://github.com/maiurnarendra/outsystems-ai-skills/releases) for the latest version and [CHANGELOG.md](CHANGELOG.md) for what changed. |
+| **Tested** | Standards skills run against a real OutSystems 11 module through the Service Studio MCP. Results in [evals/results/](evals/results/). |
 
 ## Key capabilities
 

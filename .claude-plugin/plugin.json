@@ -1,7 +1,7 @@
 {
   "name": "outsystems-ai-skills",
   "description": "OutSystems development standards for AI coding agents: module naming, architecture layers, action flows, CRUD conventions, Advanced SQL formatting, and LifeTime deployments from work items.",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "author": {
     "name": "Maiur Narendra"
   },

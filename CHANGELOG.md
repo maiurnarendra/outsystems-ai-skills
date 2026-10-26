@@ -2,6 +2,11 @@
 
 All notable changes to this project are documented here. Versions follow [semantic versioning](https://semver.org/).
 
+## [0.6.1] - 2026-10-26
+
+### Changed
+- README: the Status row no longer shows a hard-coded version; it links to Releases and the changelog. New Tested row links to the live test results.
+
 ## [0.6.0] - 2026-10-22
 
 ### Added
