@@ -10,6 +10,7 @@ When you create, modify or review OutSystems code (O11 or ODC), follow the stand
 | Entity naming, CRUD wrappers, action inputs/outputs | `skills/outsystems-crud-conventions/SKILL.md` |
 | SQL nodes | `skills/outsystems-advanced-sql/SKILL.md` |
 | Reviewing existing code | `skills/outsystems-standards-review/SKILL.md` |
+| Code review of a work item (Standards + Spec, read live through the Service Studio MCP) | `skills/outsystems-code-review/SKILL.md` (user-invoked) |
 | Deploying work items with LifeTime | `skills/outsystems-lifetime-deploy/SKILL.md` (needs the user's config file) |
 
 Non-negotiables, even if you read nothing else:

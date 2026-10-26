@@ -7,6 +7,8 @@ description: Review OutSystems modules, actions, entities or SQL against the tea
 
 Review the target (module, action, entity, SQL node, or whole application) against the other skills in this plugin. Load the relevant ones before reviewing:
 
+To review the code changed for a work item against both the standards and its acceptance criteria, reading the modules live from Service Studio, use `outsystems-code-review` instead; it uses this checklist for its Standards axis.
+
 | Checking | Skill |
 |---|---|
 | Module names / where code lives | `outsystems-module-naming` |

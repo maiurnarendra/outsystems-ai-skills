@@ -18,7 +18,7 @@ This repository packages a set of OutSystems development standards as **Agent Sk
 
 | Aspect | Details |
 | --- | --- |
-| **Type** | Six standards skills that are content only (Markdown, nothing runs) plus one deployment skill, `outsystems-lifetime-deploy`, that calls the LifeTime API with a small PowerShell script, only when you use it. |
+| **Type** | Six standards skills that are content only (Markdown, nothing runs), one code-review skill, `outsystems-code-review`, that reads your modules through the Service Studio MCP without changing them, and one deployment skill, `outsystems-lifetime-deploy`, that calls the LifeTime API with a small PowerShell script, only when you use it. |
 | **Platforms** | OutSystems 11 and OutSystems Developer Cloud (ODC). |
 | **Works with** | Claude Code (plugin or skill install), GitHub Copilot, Cursor, Kiro, Codex CLI. |
 | **Pairs with** | Any OutSystems MCP server: the MCP gives the agent access to your app, these skills govern what it writes. Also useful on its own for design and review conversations. |
@@ -35,6 +35,7 @@ This repository packages a set of OutSystems development standards as **Agent Sk
 | [**Entities & CRUD**](skills/outsystems-crud-conventions/SKILL.md) | Name entities in CamelCase (`CustomerAddress`), use `_` only for many-to-many (`User_Role`), and generate `Entity_CreateOrUpdate` (input `Source`, output `Id`, separate create/update branches, audit fields filled), `Entity_Delete` (input `Id`) and, when needed, an `Entity_DeleteAll` bulk delete in Advanced SQL. |
 | [**Advanced SQL**](skills/outsystems-advanced-sql/SKILL.md) | Format queries with uppercase clauses at the left margin, tab-indented contents, leading commas, explicit `INNER JOIN`, CamelCase aliases and parameters instead of hard-coded values. `TOP` for SQL Server, `LIMIT` for ODC/PostgreSQL. |
 | [**Standards review**](skills/outsystems-standards-review/SKILL.md) | Review a module, action, entity or query against all of the above and report findings by severity with a concrete fix for each. |
+| [**Code review**](skills/outsystems-code-review/SKILL.md) | Review the code changed for a work item on two independent axes: **Standards** (all of the above) and **Spec** (each acceptance criterion marked Met, Partly met, Not found or Needs testing, plus changes the story didn't ask for). Reads the modules live through the Service Studio MCP, never edits them, and ends with a verdict: Ready, Needs changes or Blocked. Runs only when you ask for it. |
 | [**LifeTime deploy**](skills/outsystems-lifetime-deploy/SKILL.md) | Read the work items that are ready for test from your tracker (Jira, Azure DevOps, GitHub Issues or none), find the modules in their comments, tag the changed apps and create **one** LifeTime deployment plan with the item keys as notes. Starts it only when you confirm. Tracker, environments and any after-deploy status/assignee changes come from your own config file. |
 
 ### What you can ask
@@ -43,6 +44,7 @@ This repository packages a set of OutSystems development standards as **Agent Sk
 - *"Write the CreateOrUpdate and Delete wrappers for the Invoice entity."*
 - *"Write an Advanced SQL query that returns the top 50 customers by order total."*
 - *"Review the Order_CS module against our OutSystems standards."*
+- *"/outsystems-code-review ORD-123"*: check the actions changed for a story against the standards and its acceptance criteria.
 - *"Create the deployment plan to Testing for my work items that are ready for test."*
 
 ## What's in this repository
@@ -63,6 +65,7 @@ outsystems-ai-skills/
 │  ├─ outsystems-crud-conventions/SKILL.md  # entity naming and CRUD wrappers
 │  ├─ outsystems-advanced-sql/SKILL.md      # SQL formatting and safety
 │  ├─ outsystems-standards-review/SKILL.md  # review checklist and report
+│  ├─ outsystems-code-review/SKILL.md       # work item review: Standards + Spec, via the Service Studio MCP
 │  └─ outsystems-lifetime-deploy/           # work items → LifeTime plan (SKILL.md, config.example.json, reference/, scripts/)
 ├─ evals/
 │  ├─ README.md                             # how to test the skills

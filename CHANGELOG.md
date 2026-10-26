@@ -2,6 +2,17 @@
 
 All notable changes to this project are documented here. Versions follow [semantic versioning](https://semver.org/).
 
+## [0.7.0] - 2026-10-26
+
+### Added
+- `outsystems-code-review`: reviews the code changed for a work item on two independent axes. **Standards** walks the `outsystems-standards-review` checklist; **Spec** marks each acceptance criterion Met, Partly met, Not found or Needs testing, with the element and node as evidence, and lists changes the story didn't ask for. Reads modules live through the Service Studio MCP and never edits, merges or publishes. Ends with a verdict: Ready, Needs changes or Blocked.
+- The skill is user-invoked only (`disable-model-invocation: true`): it runs when the developer types `/outsystems-code-review`.
+- Eval scenarios `code-review-01` to `code-review-03`.
+- Inspired by the Standards + Spec review in [mattpocock/skills](https://github.com/mattpocock/skills), rewritten for OutSystems (no git diff: scope comes from the user or the work item).
+
+### Changed
+- README, `AGENTS.md`, Copilot instructions, plugin descriptions and `outsystems-standards-review` point to the new skill.
+
 ## [0.6.1] - 2026-10-26
 
 ### Changed
