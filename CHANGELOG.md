@@ -2,6 +2,24 @@
 
 All notable changes to this project are documented here. Versions follow [semantic versioning](https://semver.org/).
 
+## [0.8.1] - 2026-10-27
+
+Lessons from the first live runs (results in `evals/results/`).
+
+### Changed
+- `outsystems-code-review`:
+  - Warns the user to approve the Service Studio session-token dialog, and retries once on time-out.
+  - Handles large elements: prefers Model API code, searches saved output, and lists unread parts under "Not reviewed".
+  - Offers to read the event handler or caller, read-only, before calling a finding a defect.
+  - Marks findings unrelated to the work item as *(pre-existing?)*, lists work-item findings first, and lets pre-existing findings affect the verdict only when Critical.
+  - "Needs testing" criteria now come with test steps and the expected result.
+- `outsystems-data-model`:
+  - Uses the referenced entities in `getDataModel` as a reuse map, and notes where the existing model breaks the standard.
+  - Prefers concrete-case questions over "Is X right?".
+  - Checks decisions against each other before writing; surprises become open questions.
+  - Topics that don't change the model may be parked.
+  - Proposal and glossary are shown and approved before they are written to a project folder.
+
 ## [0.8.0] - 2026-10-27
 
 ### Added

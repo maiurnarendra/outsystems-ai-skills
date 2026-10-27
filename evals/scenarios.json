@@ -1,5 +1,5 @@
 {
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "Prompts that exercise each OutSystems standard. Run each prompt with and without the skills installed and score the expectations. A rule is proven only when the with-skill run passes and the without-skill run does not.",
   "scenarios": [
     {
@@ -249,7 +249,9 @@
         "States the scope taken from the comment (Order_CS > Order_CreateOrUpdate; Order_BL > ApplyDiscount) and asks the user to confirm it",
         "Reports a Spec table with one row per acceptance criterion and a verdict of Met / Partly met / Not found / Needs testing, citing the element and node as evidence",
         "Reports Standards findings separately, grouped Critical / Major / Minor, each with a concrete fix",
-        "Ends with a verdict (Ready / Needs changes / Blocked) that follows the verdict rules"
+        "Ends with a verdict (Ready / Needs changes / Blocked) that follows the verdict rules",
+        "Marks findings unrelated to the work item as (pre-existing?) and lists work-item findings first",
+        "Gives test steps and the expected result for every Needs testing criterion"
       ]
     },
     {
@@ -282,7 +284,9 @@
         "Asks one question at a time, each with a recommended answer and a reason",
         "Proposes ExpenseClaimStatus as a static entity because logic depends on its values, tested with a concrete case",
         "Models ExpenseLine with a foreign key to ExpenseClaim and delete rule Delete; does not create a junction entity",
-        "Does not create or change any entity; offers outsystems-crud-conventions to build it after the proposal is accepted"
+        "Does not create or change any entity; offers outsystems-crud-conventions to build it after the proposal is accepted",
+        "Before writing, walks through scenarios that combine decisions and turns surprises into open questions",
+        "Shows the proposal and glossary and waits for a yes before writing them to a project folder"
       ]
     },
     {

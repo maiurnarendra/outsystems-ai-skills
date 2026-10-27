@@ -22,7 +22,7 @@ Keep the axes independent. A flow can follow every naming rule and still miss an
 ## 0. Requirements
 
 - The **Service Studio MCP** (`servicestudio`) connected, with the modules to review open in Service Studio. If its tools are missing or refuse the connection, say so and stop; offer `outsystems-standards-review` on pasted code instead.
-- Get one session token with `createSessionToken` and reuse it on every call.
+- Get one session token with `createSessionToken` and reuse it on every call. The call waits until the user approves it in a Service Studio dialog: tell the user to watch for it **before** calling. If it times out, ask them to approve and call it once more.
 - Call `listApps` and use the module names it returns exactly as `eSpaceName`.
 
 ## 1. Fix the scope
@@ -48,6 +48,10 @@ For every element in scope, read it once and keep the result for both axes:
 | Structures | `getStructures` |
 | Module references | `runQuery` on the module (never `omlRefreshReferences`: it changes the model) |
 
+**Large elements.** A Reactive block or screen can be well over 100,000 characters. Prefer `includeJson: "Never"` (Model API code, easier to search). If the tool output is too large and saved to a file, search it for the element names in scope and read those parts in full; never judge a flow you only saw partly. List anything you could not read under "Not reviewed".
+
+**Follow the event.** When a finding depends on code outside the scope (the parent that handles a block's event, the action that calls the one under review), say so and offer to read that element too, read-only, before calling it a defect.
+
 Also call `getValidationMessages` for each module in scope with `filter: ["error", "warning"]`. Service Studio's own errors and warnings are findings too.
 
 SQL nodes are inside the action JSON: review the statement text against `outsystems-advanced-sql`.
@@ -57,6 +61,8 @@ SQL nodes are inside the action JSON: review the statement text against `outsyst
 Load the standards skills that match the elements (`outsystems-module-naming`, `outsystems-architecture`, `outsystems-action-flows`, `outsystems-crud-conventions`, `outsystems-advanced-sql`) and walk the checklist in `outsystems-standards-review`.
 
 Judge only from the code collected in step 2. Do not read the work item for this axis. Every finding cites the element and the node or attribute (`Order_CreateOrUpdate › If "If1"`), the rule broken, and a concrete fix.
+
+**Separate the change from existing debt.** Without a diff, most of a large element is older than the work item. Mark every finding that has no link to the work item **(pre-existing?)**, list the findings related to the work item first within each severity, and recommend a separate technical-debt item for the pre-existing ones instead of blocking the work item on them.
 
 Things only visible in the live model, worth checking explicitly:
 - node coordinates: True branch below the If, False branch to the right, For Each Cycle to the right, no connector going up-left except loop returns;
@@ -73,7 +79,7 @@ From the work item, write the acceptance criteria as a numbered list. If the ite
 | **Met** | The logic that satisfies it exists; cite the element and node |
 | **Partly met** | Some cases handled, some not (e.g. create works, update path ignores the new field) |
 | **Not found** | No code in scope implements it |
-| **Needs testing** | Cannot be decided from the model alone (UI behaviour, timing, data in the environment). Say what to test |
+| **Needs testing** | Cannot be decided from the model alone (UI behaviour, library or Forge component behaviour, timing, data in the environment). Give the test as steps and the expected result |
 
 Also report:
 - **Out of scope changes**: logic in scope that no criterion asks for. Not automatically wrong, but the reviewer must know.
@@ -106,7 +112,7 @@ Out of scope: ApplyDiscount also recalculates shipping (not in the story).
 ### Major
 - ApplyDiscount › If "If1": label it "IsDiscountValid".
 ### Minor
-- GetOrderById › SQL "GetOrder": `join` in lowercase on line 4; use `INNER JOIN`.
+- GetOrderById › SQL "GetOrder": `join` in lowercase on line 4; use `INNER JOIN`. (pre-existing?)
 
 ## Service Studio messages
 - Warning: Order_BL › GetOrderById › Aggregate "GetOrders" returns more records than used.
@@ -115,6 +121,7 @@ Summary: Spec 1/3 met, 1 not found, 1 needs testing · Standards 1 critical, 1 m
 ```
 
 **Verdict rules:**
+- Findings marked *(pre-existing?)* count toward the verdict only when they are Critical.
 - **Blocked**: any Critical finding, any Service Studio error, or any criterion Not found.
 - **Needs changes**: any Major finding or Partly met criterion.
 - **Ready**: only Minor findings and Needs testing items. A Ready item still lists what to test.
