@@ -13,6 +13,8 @@ A review that answers two separate questions about the code changed for one work
 | **Standards** | Is it built the way the team builds OutSystems code? | The other skills in this plugin (checklist in `outsystems-standards-review`) |
 | **Spec** | Does it do what the work item asks, no more and no less? | The user story or bug: description, acceptance criteria, comments |
 
+Based on the Standards + Spec review in Matt Pocock's [skills](https://github.com/mattpocock/skills), adapted to OutSystems.
+
 Keep the axes independent. A flow can follow every naming rule and still miss an acceptance criterion; a correct feature can still break the architecture. Each axis is judged on its own inputs, then the results are merged.
 
 **Read-only.** This skill never changes the model: do not call `applyModelApiCode`, `omlMerge`, `omlPublish` or `omlRefreshReferences` while reviewing. Fixes happen only after the report, when the user asks for them.

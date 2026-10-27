@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented here. Versions follow [semantic versioning](https://semver.org/).
 
+## [0.7.1] - 2026-10-27
+
+### Added
+- README: Credits section. Matt Pocock's [skills](https://github.com/mattpocock/skills) repository is credited as the basis of `outsystems-code-review`, and the OutSystems 11 MCP as the model for this repository.
+- `outsystems-code-review`: credit line to the original Standards + Spec review.
+
 ## [0.7.0] - 2026-10-26
 
 ### Added

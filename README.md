@@ -152,6 +152,11 @@ The rules are a starting point. Fork the repository, edit the Markdown in `skill
 
 Issues and pull requests are welcome. Every proposed rule needs a *good* and a *bad* example and the reason behind it. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
+## Credits
+
+- [**Matt Pocock**](https://github.com/mattpocock) and his [skills repository](https://github.com/mattpocock/skills). The `outsystems-code-review` skill is based on his `code-review` skill, which reviews a change on two independent axes, Standards and Spec. It is rewritten here for OutSystems: there is no git diff, so the scope comes from the developer or the work item, and modules are read live through the Service Studio MCP.
+- [**OutSystems 11 MCP**](https://github.com/OutSystems/outsystems11-mcp): the model for this repository's structure and README.
+
 ## License
 
 [MIT](LICENSE)
