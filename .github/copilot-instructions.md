@@ -8,6 +8,7 @@ When you generate or review OutSystems code, follow the rules in [AGENTS.md](../
 - Data model design (before creating entities): `skills/outsystems-data-model/SKILL.md`
 - Entities and CRUD: `skills/outsystems-crud-conventions/SKILL.md`
 - Advanced SQL: `skills/outsystems-advanced-sql/SKILL.md`
+- Integrations (`_IS`): `skills/outsystems-integrations/SKILL.md`
 - Reviews: `skills/outsystems-standards-review/SKILL.md`
 - Work item code review (Standards + Spec): `skills/outsystems-code-review/SKILL.md`
 - LifeTime deployments: `skills/outsystems-lifetime-deploy/SKILL.md`

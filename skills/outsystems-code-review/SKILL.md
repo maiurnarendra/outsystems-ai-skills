@@ -58,7 +58,7 @@ SQL nodes are inside the action JSON: review the statement text against `outsyst
 
 ## 3. Standards axis
 
-Load the standards skills that match the elements (`outsystems-module-naming`, `outsystems-architecture`, `outsystems-action-flows`, `outsystems-crud-conventions`, `outsystems-advanced-sql`) and walk the checklist in `outsystems-standards-review`.
+Load the standards skills that match the elements (`outsystems-module-naming`, `outsystems-architecture`, `outsystems-action-flows`, `outsystems-crud-conventions`, `outsystems-advanced-sql`, `outsystems-integrations`) and walk the checklist in `outsystems-standards-review`.
 
 Judge only from the code collected in step 2. Do not read the work item for this axis. Every finding cites the element and the node or attribute (`Order_CreateOrUpdate › If "If1"`), the rule broken, and a concrete fix.
 

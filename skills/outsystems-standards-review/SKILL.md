@@ -16,6 +16,7 @@ To review the code changed for a work item against both the standards and its ac
 | Action flows, Ifs, comments | `outsystems-action-flows` |
 | Entity wrappers and parameters | `outsystems-crud-conventions` |
 | SQL nodes | `outsystems-advanced-sql` |
+| Integration modules (`_IS`) | `outsystems-integrations` |
 
 ## Checklist
 
@@ -61,6 +62,14 @@ To review the code changed for a work item against both the standards and its ac
 - [ ] No `SELECT *`, no physical table names, no hard-coded Ids/dates
 - [ ] Row limit uses `TOP n` (SQL Server) or `LIMIT n` (ODC/PostgreSQL)
 - [ ] No unsanitised `Expand Inline`
+
+**Integrations**
+- [ ] One `_IS` per external system
+- [ ] Consumed methods and imported structures are `Public = No`; no other module references them
+- [ ] Public `_IS` actions have business names and return the team's own structure
+- [ ] Own structures hold only the attributes the application uses; dates, numbers and Booleans have real types
+- [ ] No raw response (external structure, JSON text, status code, `Success`/`ErrorMessage`) in a public output; external errors raise User Exceptions
+- [ ] Endpoints and credentials in configuration, not in the flow
 
 ## Report format
 

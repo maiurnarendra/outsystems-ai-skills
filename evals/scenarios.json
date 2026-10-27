@@ -1,5 +1,5 @@
 {
-  "version": "0.8.2",
+  "version": "0.9.0",
   "description": "Prompts that exercise each OutSystems standard. Run each prompt with and without the skills installed and score the expectations. A rule is proven only when the with-skill run passes and the without-skill run does not.",
   "scenarios": [
     {
@@ -307,6 +307,38 @@
         "Flags that Client is an avoided synonym of Customer and proposes reusing Customer from Customer_CS",
         "Does not create a second entity for the same concept",
         "Writes the decision and its reason into the proposal and keeps the glossary entry"
+      ]
+    },
+    {
+      "id": "integration-01",
+      "skill": "outsystems-integrations",
+      "prompt": "Consume a weather REST API in OutSystems 11. Each day in the response has about 30 fields; our screens only show the date, temperature, condition and wind speed. How do I build it?",
+      "expectations": [
+        "Puts the integration in one _IS module for that system (e.g. Weather_IS)",
+        "Keeps the consumed REST method and the imported structures Public = No",
+        "Exposes a public action with a business name (e.g. GetWeatherForecast)",
+        "Returns an own structure with a business name (e.g. WeatherForecast) holding only the 4 needed attributes",
+        "Converts the text date to a Date type and maps the attributes in the _IS (Assign or ListAppendAll mapping)"
+      ]
+    },
+    {
+      "id": "integration-02",
+      "skill": "outsystems-integrations",
+      "prompt": "Review this: Order_BL calls the consumed method GetCustomer_v3 from Crm_IS directly and stores its CustomerResponse structure (45 attributes, dates as text). Crm_IS also has a public action that returns StatusCode and ErrorMessage.",
+      "expectations": [
+        "Flags Order_BL using the consumed method and imported structure directly as Critical",
+        "Proposes a public Crm_IS action with a business name returning an own structure with only the attributes Order_BL uses",
+        "Flags text-typed dates and the StatusCode/ErrorMessage outputs; proposes real types and a User Exception"
+      ]
+    },
+    {
+      "id": "integration-03",
+      "skill": "outsystems-integrations",
+      "prompt": "Our WeatherForecast structure from Weather_IS now also needs the humidity. Should I just return the full API response so we never have to change it again?",
+      "expectations": [
+        "Refuses returning the full API response",
+        "Adds one attribute (e.g. Humidity) to the own structure and maps it in the _IS action",
+        "Notes that only consumers using the new attribute need changes"
       ]
     },
     {

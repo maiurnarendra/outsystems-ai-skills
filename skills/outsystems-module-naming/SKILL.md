@@ -45,7 +45,7 @@ Mobile variants exist because Client-side entities, Client Actions and offline s
 4. Logic that coordinates more than one `_CS` belongs in `_BL`.
 5. If something has no business meaning and could be reused by another company, it belongs in Foundation (`_FS`, `_Lib`, `_IS`, `_Pat`, `_TH`).
 6. **`_FS` modules are agnostic to the business model**: they never contain entities with data and never reference Core modules. They receive everything they need through action inputs.
-7. One external system = one `_IS` module. Normalise its data into your own structures there; never let the external structure leak into Core.
+7. One external system = one `_IS` module. Normalise its data into your own structures there, with only the attributes the application needs; never let the external structure leak into Core. See `outsystems-integrations`.
 
 ## ODC note
 

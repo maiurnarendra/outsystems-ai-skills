@@ -2,6 +2,21 @@
 
 All notable changes to this project are documented here. Versions follow [semantic versioning](https://semver.org/).
 
+## [0.9.0] - 2026-10-28
+
+### Added
+- `outsystems-integrations`: standards for `_IS` modules.
+  - One `_IS` per external system.
+  - Consumed methods and imported structures stay `Public = No`.
+  - Public actions have business names and return the team's own structure with **only the attributes the application needs** (an API with 30 fields used for 4 gives a structure with 4).
+  - Types are converted at the boundary; the raw response never leaves the `_IS`.
+  - External errors become User Exceptions; endpoints and credentials live in configuration.
+- Review checklist: Integrations section.
+- Eval scenarios `integration-01` to `integration-03`.
+
+### Changed
+- `outsystems-module-naming`, `outsystems-code-review`, README, `AGENTS.md` (new non-negotiable 9), Copilot instructions and plugin descriptions point to the new skill.
+
 ## [0.8.2] - 2026-10-27
 
 ### Changed
