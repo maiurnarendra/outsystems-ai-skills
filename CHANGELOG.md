@@ -2,6 +2,16 @@
 
 All notable changes to this project are documented here. Versions follow [semantic versioning](https://semver.org/).
 
+## [0.8.0] - 2026-10-27
+
+### Added
+- `outsystems-data-model`: designs entities before they are built. It interviews the developer one question at a time, each with a recommended answer, covering the business term, owning `_CS`, static vs regular entity, foreign key vs real many-to-many, delete rules, attributes and lengths, indexes, volume and sensitive data. It reads the existing model (Service Studio MCP, read-only) and `GLOSSARY.md` first, then writes an entity proposal (tables, Mermaid diagram, decisions with reasons, open questions) and updates the glossary. It never creates entities; `outsystems-crud-conventions` builds them on request. User-invoked only.
+- Based on the domain-modeling and grilling skills in [mattpocock/skills](https://github.com/mattpocock/skills), credited in the README.
+- Eval scenarios `data-model-01` to `data-model-03`.
+
+### Changed
+- README, `AGENTS.md`, Copilot instructions and plugin descriptions list the new skill.
+
 ## [0.7.1] - 2026-10-27
 
 ### Added

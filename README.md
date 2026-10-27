@@ -18,7 +18,7 @@ This repository packages a set of OutSystems development standards as **Agent Sk
 
 | Aspect | Details |
 | --- | --- |
-| **Type** | Six standards skills that are content only (Markdown, nothing runs), one code-review skill, `outsystems-code-review`, that reads your modules through the Service Studio MCP without changing them, and one deployment skill, `outsystems-lifetime-deploy`, that calls the LifeTime API with a small PowerShell script, only when you use it. |
+| **Type** | Six standards skills that are content only (Markdown, nothing runs), one data-model design skill, `outsystems-data-model`, that interviews you before entities are built, one code-review skill, `outsystems-code-review`, that reads your modules through the Service Studio MCP without changing them, and one deployment skill, `outsystems-lifetime-deploy`, that calls the LifeTime API with a small PowerShell script, only when you use it. |
 | **Platforms** | OutSystems 11 and OutSystems Developer Cloud (ODC). |
 | **Works with** | Claude Code (plugin or skill install), GitHub Copilot, Cursor, Kiro, Codex CLI. |
 | **Pairs with** | Any OutSystems MCP server: the MCP gives the agent access to your app, these skills govern what it writes. Also useful on its own for design and review conversations. |
@@ -32,6 +32,7 @@ This repository packages a set of OutSystems development standards as **Agent Sk
 | [**Module naming**](skills/outsystems-module-naming/SKILL.md) | Name every module with its layer suffix: `_CS`, `_BL`, `_CW`, `_FS`, `_IS`, `_Lib`, `_TH`, `_Pat`, `_API`, and the mobile variants `_MCS`, `_MBL`, `_MCW`, `_MTH` (a leading `M` means mobile). Place each element in the right module. |
 | [**Architecture**](skills/outsystems-architecture/SKILL.md) | Apply the 3-layer Architecture Canvas (End-user, Core, Foundation), block upward and End-user-to-End-user references, and fix common violations. |
 | [**Action flows**](skills/outsystems-action-flows/SKILL.md) | Name actions in the singular (`GetStructure`, `GetStructureById`) and place Get actions in `_BL`. Lay flows out top to bottom and left to right with straight, non-crossing connectors. If branches go True down, False right, with no `not` in conditions and a question or Boolean name as the label (`Has structure?`, `IsToComplete`). Write Descriptions on every public action, input and output. |
+| [**Data model design**](skills/outsystems-data-model/SKILL.md) | Before any entity exists, interview you one question at a time, each with a recommended answer: the business term and its glossary entry, the owning `_CS`, static vs regular entity, foreign key vs real many-to-many, delete rules (Protect / Delete / Ignore), attributes and lengths, indexes, volume and sensitive data. Checks the existing model and `GLOSSARY.md` first, then writes an entity proposal with a diagram and the reasons for each decision. Runs only when you ask for it. |
 | [**Entities & CRUD**](skills/outsystems-crud-conventions/SKILL.md) | Name entities in CamelCase (`CustomerAddress`), use `_` only for many-to-many (`User_Role`), and generate `Entity_CreateOrUpdate` (input `Source`, output `Id`, separate create/update branches, audit fields filled), `Entity_Delete` (input `Id`) and, when needed, an `Entity_DeleteAll` bulk delete in Advanced SQL. |
 | [**Advanced SQL**](skills/outsystems-advanced-sql/SKILL.md) | Format queries with uppercase clauses at the left margin, tab-indented contents, leading commas, explicit `INNER JOIN`, CamelCase aliases and parameters instead of hard-coded values. `TOP` for SQL Server, `LIMIT` for ODC/PostgreSQL. |
 | [**Standards review**](skills/outsystems-standards-review/SKILL.md) | Review a module, action, entity or query against all of the above and report findings by severity with a concrete fix for each. |
@@ -41,6 +42,7 @@ This repository packages a set of OutSystems development standards as **Agent Sk
 ### What you can ask
 
 - *"Create the Core modules for an expense-claims app with a mobile app."*
+- *"/outsystems-data-model Design the entities for expense claims with approvals."*
 - *"Write the CreateOrUpdate and Delete wrappers for the Invoice entity."*
 - *"Write an Advanced SQL query that returns the top 50 customers by order total."*
 - *"Review the Order_CS module against our OutSystems standards."*
@@ -62,6 +64,7 @@ outsystems-ai-skills/
 │  ├─ outsystems-module-naming/SKILL.md     # module suffixes and placement
 │  ├─ outsystems-architecture/SKILL.md      # layers and dependency rules
 │  ├─ outsystems-action-flows/SKILL.md      # flows, If labels, comments, exceptions
+│  ├─ outsystems-data-model/SKILL.md        # entity design interview, glossary, proposal
 │  ├─ outsystems-crud-conventions/SKILL.md  # entity naming and CRUD wrappers
 │  ├─ outsystems-advanced-sql/SKILL.md      # SQL formatting and safety
 │  ├─ outsystems-standards-review/SKILL.md  # review checklist and report
@@ -154,7 +157,9 @@ Issues and pull requests are welcome. Every proposed rule needs a *good* and a *
 
 ## Credits
 
-- [**Matt Pocock**](https://github.com/mattpocock) and his [skills repository](https://github.com/mattpocock/skills). The `outsystems-code-review` skill is based on his `code-review` skill, which reviews a change on two independent axes, Standards and Spec. It is rewritten here for OutSystems: there is no git diff, so the scope comes from the developer or the work item, and modules are read live through the Service Studio MCP.
+- [**Matt Pocock**](https://github.com/mattpocock) and his [skills repository](https://github.com/mattpocock/skills). Two skills here are based on his work, rewritten for OutSystems:
+  - `outsystems-code-review` on his `code-review` skill, which reviews a change on two independent axes, Standards and Spec. OutSystems has no git diff, so the scope comes from the developer or the work item, and modules are read live through the Service Studio MCP.
+  - `outsystems-data-model` on his `domain-modeling` and `grilling` skills: a one-question-at-a-time interview, with a recommended answer each time, that challenges terms against a glossary. Here the decisions are OutSystems ones: owning `_CS`, static vs regular entity, many-to-many, delete rules.
 - [**OutSystems 11 MCP**](https://github.com/OutSystems/outsystems11-mcp): the model for this repository's structure and README.
 
 ## License

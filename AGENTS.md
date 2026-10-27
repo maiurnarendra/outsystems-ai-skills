@@ -7,6 +7,7 @@ When you create, modify or review OutSystems code (O11 or ODC), follow the stand
 | Creating or naming modules, apps, libraries | `skills/outsystems-module-naming/SKILL.md` |
 | Adding dependencies, designing an app's structure | `skills/outsystems-architecture/SKILL.md` |
 | Writing Server/Client/Service Action logic | `skills/outsystems-action-flows/SKILL.md` |
+| Designing new entities before building them (interview, glossary, entity proposal) | `skills/outsystems-data-model/SKILL.md` (user-invoked) |
 | Entity naming, CRUD wrappers, action inputs/outputs | `skills/outsystems-crud-conventions/SKILL.md` |
 | SQL nodes | `skills/outsystems-advanced-sql/SKILL.md` |
 | Reviewing existing code | `skills/outsystems-standards-review/SKILL.md` |
