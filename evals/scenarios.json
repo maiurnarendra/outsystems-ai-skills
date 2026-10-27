@@ -1,5 +1,5 @@
 {
-  "version": "0.8.1",
+  "version": "0.8.2",
   "description": "Prompts that exercise each OutSystems standard. Run each prompt with and without the skills installed and score the expectations. A rule is proven only when the with-skill run passes and the without-skill run does not.",
   "scenarios": [
     {

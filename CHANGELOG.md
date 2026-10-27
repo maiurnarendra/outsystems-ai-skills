@@ -2,6 +2,11 @@
 
 All notable changes to this project are documented here. Versions follow [semantic versioning](https://semver.org/).
 
+## [0.8.2] - 2026-10-27
+
+### Changed
+- `evals/results/2026-10-26-code-review.md`: removed the warning count and the defect description of the reviewed module. Results keep the checks, not details of a real system.
+
 ## [0.8.1] - 2026-10-27
 
 Lessons from the first live runs (results in `evals/results/`).
