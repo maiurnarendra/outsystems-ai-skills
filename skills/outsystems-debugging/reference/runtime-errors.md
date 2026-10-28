@@ -1,0 +1,27 @@
+# Runtime errors
+
+Known OutSystems errors, their usual cause, where to look and the usual fix. A match is a candidate: confirm it with the check before fixing.
+
+| Message (or part of it) | Usual cause | Check | Usual fix |
+|---|---|---|---|
+| *List was redefined while being iterated* | The list a For Each iterates is changed inside the loop: `ListAppend` / `ListRemove` / `ListClear` on it, an Assign to it, or a Refresh of the aggregate that owns it | Find every node inside the loop that writes the iterated list or refreshes its source | Collect changes in a second list and apply them after the loop; iterate a copy (`ListDuplicate`) only when the logic really needs it |
+| *Timeout expired* / *The wait operation timed out* | Slow query, missing index, a lock held by another transaction, or a server call longer than its Server Request Timeout | General log timing for the query; the same query in Development with production-like volume | See [performance.md](performance.md); raise a timeout only after the cause is known |
+| *Communication error* / *Error communicating with the server* (Reactive, Mobile) | A server action called from a client action failed, timed out or returned too much data | Browser Network tab: status, duration and size of the `screenservices` / `actions` request; matching entry in the Errors log | Fix the server-side error; trim the payload; split the call |
+| *Invalid Login* / *NotRegisteredException* / *Not Authorized* | Role check failed, session expired, or an anonymous screen calls an action that requires a role | Roles on the screen and on the action; does it happen after idle time? | Correct the roles; handle the security exception on the screen; don't remove the check |
+| *Cannot insert duplicate key row* / *violation of UNIQUE KEY* | Insert breaks a unique index: missing check, or two requests creating the same record at once | The unique index and the values in the log; double-click / double submit | Check before create in the `_CreateOrUpdate` wrapper; disable the button while saving; handle the exception |
+| *The DELETE statement conflicted with the REFERENCE constraint* | Delete rule Protect: child records still exist | Child entities with Protect on this foreign key | Delete or move the children first, or deactivate (`IsActive`) instead of deleting; revisit the delete rule (see `outsystems-data-model`) |
+| *String or binary data would be truncated* | Text longer than the attribute length | Attribute length vs input length | Validate length in the wrapper; change the length only if the business needs it |
+| *Incorrect syntax near ')'* in an Advanced SQL | Empty list in an Expand Inline `IN (...)` parameter | Value of the parameter when the list is empty | `BuildSafe_InClause*` and an `If` for the empty case, or a sentinel such as `(0)` |
+| *Invalid column name* / *Invalid object name* in an Advanced SQL | Attribute renamed or removed, physical table name used, output structure out of sync | The statement vs the current entity and the output structure | Use `{Entity}.[Attribute]`; align the output structure (see `outsystems-advanced-sql`) |
+| *Conversion failed when converting date and/or time* / invalid `TextToDate` | Text date in an unexpected format, often from an integration or an import | The raw value in the Integrations / General log | Convert once, at the boundary, with an explicit format (see `outsystems-integrations`) |
+| *Transaction (Process ID n) was deadlocked* | Two long transactions update the same rows in a different order (often timers vs screens) | Times of the deadlocks vs timer runs; order of updates | Shorter transactions (commit per batch), same update order, avoid updating the same rows from timers during the day |
+| *Timer … timed out* / timer never finishes | The timer processes everything in one run | General log: duration and row count per run | Process in batches, `CommitTransaction` per batch, `WakeTimer` to continue (see [performance.md](performance.md)) |
+| Wrong values saved, no error | `.Current` of an empty list returns default values (`NullIdentifier()`, empty text), an update on a stale record, or `CreatedOn` overwritten | The data in the log or the database vs the flow; `List.Empty` checks before `.Current` | Check `List.Empty = False` before using `.Current`; follow the `_CreateOrUpdate` flow in `outsystems-crud-conventions` |
+| *Maximum call stack size exceeded* (browser) / *stack overflow* (server) | An action that ends up calling itself: an event handler that changes the value that raises the event, OnParametersChanged that changes a block input | Trace the call chain in the log or with breakpoints | Break the loop: compare old and new value, or move the change out of the handler |
+| *Object reference not set to an instance of an object* | Usually inside an extension (C#) or a Forge component receiving a null or empty value | Stack trace: which extension action | Validate inputs before calling the extension; report to the component owner |
+
+## Where errors hide
+
+- **Swallowed exceptions:** an exception handler that only logs, or nothing at all. The user sees wrong data instead of an error. Search the flow for handlers without a Raise or a user message.
+- **Async work:** timers, BPT processes and Light processes fail without a user on screen. Check the Errors log by module and time, and Environment Health for timers.
+- **Integrations:** the error is in the external system; the Integrations log shows the response. Translate it into a User Exception in the `_IS`.

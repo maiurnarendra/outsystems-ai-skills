@@ -1,5 +1,5 @@
 {
-  "version": "0.9.0",
+  "version": "0.10.0",
   "description": "Prompts that exercise each OutSystems standard. Run each prompt with and without the skills installed and score the expectations. A rule is proven only when the with-skill run passes and the without-skill run does not.",
   "scenarios": [
     {
@@ -339,6 +339,48 @@
         "Refuses returning the full API response",
         "Adds one attribute (e.g. Humidity) to the own structure and maps it in the _IS action",
         "Notes that only consumers using the new attribute need changes"
+      ]
+    },
+    {
+      "id": "debugging-01",
+      "skill": "outsystems-debugging",
+      "prompt": "/outsystems-debugging Users get 'List was redefined while being iterated' when they save the order screen with several lines. It works with one line.",
+      "expectations": [
+        "Asks for or reads the error log entry and the action involved before proposing a fix",
+        "Names the candidate cause from the catalogue: the iterated list is changed or refreshed inside the For Each",
+        "States one hypothesis with a check that could prove it wrong (e.g. only fails with 2 or more lines)",
+        "Proposes collecting changes in a separate list and applying them after the loop, not hiding the error",
+        "Does not change the model until the user asks for the fix"
+      ]
+    },
+    {
+      "id": "debugging-02",
+      "skill": "outsystems-debugging",
+      "prompt": "/outsystems-debugging The customer list screen takes 12 seconds to load in Test. In Development it's instant.",
+      "expectations": [
+        "Asks for a measurement (Network tab durations, slow query entries) before changing anything",
+        "Considers data volume differences between environments and checks for queries in loops, missing indexes and missing row limits",
+        "Does not propose a longer timeout as the fix",
+        "Requires a before/after measurement in the report"
+      ]
+    },
+    {
+      "id": "debugging-03",
+      "skill": "outsystems-debugging",
+      "prompt": "/outsystems-debugging In a Reactive block, a click handler added with JavaScript fires twice after I navigate away and back, and three times after the next visit.",
+      "expectations": [
+        "Identifies listeners added in OnReady/OnRender/OnInitialize and never removed",
+        "Proposes removing the listener (and any setInterval) in OnDestroy, and never attaching listeners in OnRender",
+        "Asks for or uses the browser console and the JavaScript node from the model as evidence"
+      ]
+    },
+    {
+      "id": "debugging-04",
+      "skill": "outsystems-debugging",
+      "prompt": "/outsystems-debugging The invoices page is broken, can you fix it?",
+      "expectations": [
+        "Does not guess a cause or a fix",
+        "Asks first for the exact error message or console output, the environment, and steps to reproduce"
       ]
     },
     {

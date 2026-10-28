@@ -10,6 +10,7 @@ When you generate or review OutSystems code, follow the rules in [AGENTS.md](../
 - Advanced SQL: `skills/outsystems-advanced-sql/SKILL.md`
 - Integrations (`_IS`): `skills/outsystems-integrations/SKILL.md`
 - Reviews: `skills/outsystems-standards-review/SKILL.md`
+- Debugging (runtime errors, performance, front-end/JavaScript): `skills/outsystems-debugging/SKILL.md`
 - Work item code review (Standards + Spec): `skills/outsystems-code-review/SKILL.md`
 - LifeTime deployments: `skills/outsystems-lifetime-deploy/SKILL.md`
 

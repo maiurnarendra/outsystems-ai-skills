@@ -18,7 +18,7 @@ This repository packages a set of OutSystems development standards as **Agent Sk
 
 | Aspect | Details |
 | --- | --- |
-| **Type** | Seven standards skills that are content only (Markdown, nothing runs), one data-model design skill, `outsystems-data-model`, that interviews you before entities are built, one code-review skill, `outsystems-code-review`, that reads your modules through the Service Studio MCP without changing them, and one deployment skill, `outsystems-lifetime-deploy`, that calls the LifeTime API with a small PowerShell script, only when you use it. |
+| **Type** | Seven standards skills that are content only (Markdown, nothing runs), one data-model design skill, `outsystems-data-model`, that interviews you before entities are built, one debugging skill, `outsystems-debugging`, that diagnoses errors, slowness and front-end issues read-only, one code-review skill, `outsystems-code-review`, that reads your modules through the Service Studio MCP without changing them, and one deployment skill, `outsystems-lifetime-deploy`, that calls the LifeTime API with a small PowerShell script, only when you use it. |
 | **Platforms** | OutSystems 11 and OutSystems Developer Cloud (ODC). |
 | **Works with** | Claude Code (plugin or skill install), GitHub Copilot, Cursor, Kiro, Codex CLI. |
 | **Pairs with** | Any OutSystems MCP server: the MCP gives the agent access to your app, these skills govern what it writes. Also useful on its own for design and review conversations. |
@@ -37,6 +37,7 @@ This repository packages a set of OutSystems development standards as **Agent Sk
 | [**Advanced SQL**](skills/outsystems-advanced-sql/SKILL.md) | Format queries with uppercase clauses at the left margin, tab-indented contents, leading commas, explicit `INNER JOIN`, CamelCase aliases and parameters instead of hard-coded values. `TOP` for SQL Server, `LIMIT` for ODC/PostgreSQL. |
 | [**Integrations**](skills/outsystems-integrations/SKILL.md) | Keep every external system behind its own `_IS`. Consumed methods and imported structures stay private; public actions have business names (`GetWeatherForecast`) and return your own structure with **only the attributes you need**: if the API returns 30 fields and you use 4, the structure has 4. Types are converted at the boundary and external errors become User Exceptions. |
 | [**Standards review**](skills/outsystems-standards-review/SKILL.md) | Review a module, action, entity or query against all of the above and report findings by severity with a concrete fix for each. |
+| [**Debugging**](skills/outsystems-debugging/SKILL.md) | Take a bug to a confirmed root cause before anything is changed. Three tracks: **runtime errors** (Service Center / ODC logs, error IDs), **performance** (slow screens, queries, timers, integrations, always measured before and after) and **front-end**, especially JavaScript (`$parameters`, `$actions`, `$resolve`, OnReady/OnRender/OnDestroy, leaking listeners and intervals, Forge widgets, CSS). Gathers evidence from logs, the browser and the model (read-only), tests one hypothesis at a time, and reports root cause, fix and regression check. Catalogues of known errors and patterns grow with every bug solved. Runs only when you ask for it. |
 | [**Code review**](skills/outsystems-code-review/SKILL.md) | Review the code changed for a work item on two independent axes: **Standards** (all of the above) and **Spec** (each acceptance criterion marked Met, Partly met, Not found or Needs testing, plus changes the story didn't ask for). Reads the modules live through the Service Studio MCP, never edits them, and ends with a verdict: Ready, Needs changes or Blocked. Runs only when you ask for it. |
 | [**LifeTime deploy**](skills/outsystems-lifetime-deploy/SKILL.md) | Read the work items that are ready for test from your tracker (Jira, Azure DevOps, GitHub Issues or none), find the modules in their comments, tag the changed apps and create **one** LifeTime deployment plan with the item keys as notes. Starts it only when you confirm. Tracker, environments and any after-deploy status/assignee changes come from your own config file. |
 
@@ -48,6 +49,7 @@ This repository packages a set of OutSystems development standards as **Agent Sk
 - *"Write an Advanced SQL query that returns the top 50 customers by order total."*
 - *"Consume the weather API in Weather_IS. I only need date, temperature, condition and wind speed."*
 - *"Review the Order_CS module against our OutSystems standards."*
+- *"/outsystems-debugging The order list takes 12 seconds to load in Test."*
 - *"/outsystems-code-review ORD-123"*: check the actions changed for a story against the standards and its acceptance criteria.
 - *"Create the deployment plan to Testing for my work items that are ready for test."*
 
@@ -72,6 +74,7 @@ outsystems-ai-skills/
 │  ├─ outsystems-integrations/SKILL.md      # _IS modules: private API, lean own structures
 │  ├─ outsystems-standards-review/SKILL.md  # review checklist and report
 │  ├─ outsystems-code-review/SKILL.md       # work item review: Standards + Spec, via the Service Studio MCP
+│  ├─ outsystems-debugging/                 # root cause first: SKILL.md + reference/ (runtime errors, performance, front-end)
 │  └─ outsystems-lifetime-deploy/           # work items → LifeTime plan (SKILL.md, config.example.json, reference/, scripts/)
 ├─ evals/
 │  ├─ README.md                             # how to test the skills
@@ -160,9 +163,10 @@ Issues and pull requests are welcome. Every proposed rule needs a *good* and a *
 
 ## Credits
 
-- [**Matt Pocock**](https://github.com/mattpocock) and his [skills repository](https://github.com/mattpocock/skills). Two skills here are based on his work, rewritten for OutSystems:
+- [**Matt Pocock**](https://github.com/mattpocock) and his [skills repository](https://github.com/mattpocock/skills). Three skills here are based on his work, rewritten for OutSystems:
   - `outsystems-code-review` on his `code-review` skill, which reviews a change on two independent axes, Standards and Spec. OutSystems has no git diff, so the scope comes from the developer or the work item, and modules are read live through the Service Studio MCP.
   - `outsystems-data-model` on his `domain-modeling` and `grilling` skills: a one-question-at-a-time interview, with a recommended answer each time, that challenges terms against a glossary. Here the decisions are OutSystems ones: owning `_CS`, static vs regular entity, many-to-many, delete rules.
+  - `outsystems-debugging` on his `diagnosing-bugs` skill: reproduce, narrow down, one hypothesis at a time, then fix. Here the evidence comes from Service Center / ODC logs, the browser and the model, with OutSystems catalogues for runtime errors, performance and JavaScript.
 - [**OutSystems 11 MCP**](https://github.com/OutSystems/outsystems11-mcp): the model for this repository's structure and README.
 
 ## License

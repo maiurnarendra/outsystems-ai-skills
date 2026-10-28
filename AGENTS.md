@@ -12,6 +12,7 @@ When you create, modify or review OutSystems code (O11 or ODC), follow the stand
 | SQL nodes | `skills/outsystems-advanced-sql/SKILL.md` |
 | Consuming an external API or service, `_IS` modules | `skills/outsystems-integrations/SKILL.md` |
 | Reviewing existing code | `skills/outsystems-standards-review/SKILL.md` |
+| Diagnosing a bug: runtime error, slow screen or query, front-end / JavaScript issue | `skills/outsystems-debugging/SKILL.md` (user-invoked) |
 | Code review of a work item (Standards + Spec, read live through the Service Studio MCP) | `skills/outsystems-code-review/SKILL.md` (user-invoked) |
 | Deploying work items with LifeTime | `skills/outsystems-lifetime-deploy/SKILL.md` (needs the user's config file) |
 

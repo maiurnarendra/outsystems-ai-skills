@@ -2,6 +2,21 @@
 
 All notable changes to this project are documented here. Versions follow [semantic versioning](https://semver.org/).
 
+## [0.10.0] - 2026-10-28
+
+### Added
+- `outsystems-debugging`: takes a bug to a confirmed root cause before anything changes. User-invoked only.
+  - **Three tracks:** runtime errors, performance, and front-end (especially JavaScript in Reactive and Mobile).
+  - **Evidence first:** Service Center / ODC logs, the browser DevTools, and the model read through the Service Studio MCP (read-only).
+  - **One hypothesis at a time,** each with a check that could prove it wrong.
+  - **Report:** symptom, evidence, root cause, fix, check and risk. Performance fixes need a measurement before and after.
+  - **Catalogues** in `reference/`: `runtime-errors.md`, `performance.md`, `frontend.md`.
+- Based on the diagnosing-bugs skill in [mattpocock/skills](https://github.com/mattpocock/skills), credited in the README.
+- Eval scenarios `debugging-01` to `debugging-04`.
+
+### Changed
+- README, `AGENTS.md`, Copilot instructions and plugin descriptions list the new skill.
+
 ## [0.9.0] - 2026-10-28
 
 ### Added
