@@ -14,6 +14,8 @@ Turns "it doesn't work" into a root cause with evidence, then a fix. Three track
 | **Performance** | Slow screen, slow action, timer running long, timeouts, high database load | [reference/performance.md](reference/performance.md) |
 | **Front-end** | JavaScript error, UI not updating, event firing twice or never, layout broken, works in one browser only | [reference/frontend.md](reference/frontend.md) |
 
+> **On demand only.** Start this skill only when the user types `/outsystems-debugging` or explicitly asks for help diagnosing a bug. Agents without `disable-model-invocation` (Antigravity, Cursor, Codex, Kiro) may load it on their own; if the user did not ask for it, don't start it: say in one line that it is available.
+
 Based on the diagnosing-bugs skill in Matt Pocock's [skills](https://github.com/mattpocock/skills), adapted to OutSystems.
 
 **Diagnosis first, read-only.** Until the user asks for the fix, never call `applyModelApiCode`, `omlMerge` or `omlPublish`, and never change Service Center, LifeTime or environment settings.

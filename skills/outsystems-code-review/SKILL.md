@@ -13,6 +13,8 @@ A review that answers two separate questions about the code changed for one work
 | **Standards** | Is it built the way the team builds OutSystems code? | The other skills in this plugin (checklist in `outsystems-standards-review`) |
 | **Spec** | Does it do what the work item asks, no more and no less? | The user story or bug: description, acceptance criteria, comments |
 
+> **On demand only.** Start this skill only when the user types `/outsystems-code-review` or explicitly asks for a code review of a work item. Agents without `disable-model-invocation` (Antigravity, Cursor, Codex, Kiro) may load it on their own; if the user did not ask for it, don't start it: say in one line that it is available.
+
 Based on the Standards + Spec review in Matt Pocock's [skills](https://github.com/mattpocock/skills), adapted to OutSystems.
 
 Keep the axes independent. A flow can follow every naming rule and still miss an acceptance criterion; a correct feature can still break the architecture. Each axis is judged on its own inputs, then the results are merged.

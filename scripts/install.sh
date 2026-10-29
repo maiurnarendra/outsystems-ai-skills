@@ -1,21 +1,37 @@
 #!/usr/bin/env bash
-# Installs (or updates) the OutSystems AI Skills into ~/.claude/skills.
+# Installs (or updates) the OutSystems AI Skills into the skills directory
+# of Claude Code (~/.claude/skills) or Google Antigravity (~/.gemini/config/skills).
 #
 # Usage:
-#   bash scripts/install.sh              # clone latest from GitHub
-#   bash scripts/install.sh --source .   # copy from a local checkout
+#   bash scripts/install.sh                            # Claude Code, latest from GitHub
+#   bash scripts/install.sh --target antigravity       # Antigravity, latest from GitHub
+#   bash scripts/install.sh --source .                 # copy from a local checkout
+#   bash scripts/install.sh --destination ./.agents/skills   # any folder (e.g. one workspace)
 set -euo pipefail
 
 REPO_URL="https://github.com/maiurnarendra/outsystems-ai-skills.git"
-SKILLS_DIR="${HOME}/.claude/skills"
+TARGET="claude"
+DESTINATION=""
 SOURCE=""
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
+    --target) TARGET="$2"; shift 2 ;;
+    --destination) DESTINATION="$2"; shift 2 ;;
     --source) SOURCE="$2"; shift 2 ;;
     *) echo "Unknown argument: $1" >&2; exit 1 ;;
   esac
 done
+
+if [[ -n "$DESTINATION" ]]; then
+  SKILLS_DIR="$DESTINATION"
+else
+  case "$TARGET" in
+    claude) SKILLS_DIR="${HOME}/.claude/skills" ;;
+    antigravity) SKILLS_DIR="${HOME}/.gemini/config/skills" ;;
+    *) echo "Unknown target: $TARGET (use claude or antigravity)" >&2; exit 1 ;;
+  esac
+fi
 
 TMP_DIR=""
 cleanup() { [[ -n "$TMP_DIR" ]] && rm -rf "$TMP_DIR"; }
@@ -41,4 +57,4 @@ for skill in "$REPO_DIR"/skills/*/; do
   echo "Installed '$name'"
 done
 
-echo "Done. Start a new Claude Code session for the skills to load."
+echo "Done. Skills are in $SKILLS_DIR. Start a new agent session for them to load."

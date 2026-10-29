@@ -1,5 +1,5 @@
 {
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "Prompts that exercise each OutSystems standard. Run each prompt with and without the skills installed and score the expectations. A rule is proven only when the with-skill run passes and the without-skill run does not.",
   "scenarios": [
     {
@@ -389,6 +389,15 @@
       "prompt": "Write a Python function that reverses a string.",
       "expectations": [
         "No OutSystems skill is loaded and the answer does not mention OutSystems conventions"
+      ]
+    },
+    {
+      "id": "trigger-negative-02",
+      "skill": "outsystems-code-review",
+      "prompt": "(In an agent without disable-model-invocation, e.g. Antigravity) Rename the module Utils to DateTime_Lib.",
+      "expectations": [
+        "Does not start the code review, data model or debugging skill",
+        "Handles the rename with the module-naming standard and at most mentions that /outsystems-code-review is available"
       ]
     }
   ]

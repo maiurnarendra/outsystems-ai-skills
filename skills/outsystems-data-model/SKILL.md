@@ -8,6 +8,8 @@ disable-model-invocation: true
 
 Expensive mistakes are made before the first entity exists: a lookup modelled as a static entity, a reference modelled as many-to-many, an entity in the wrong `_CS`, two entities for the same business concept. This skill settles those decisions in a short interview and writes them down. The CRUD skill then builds what was decided.
 
+> **On demand only.** Start this skill only when the user types `/outsystems-data-model` or explicitly asks for a data model design interview. Agents without `disable-model-invocation` (Antigravity, Cursor, Codex, Kiro) may load it on their own; if the user did not ask for it, don't start it: say in one line that it is available.
+
 Based on the domain-modeling and grilling skills in Matt Pocock's [skills](https://github.com/mattpocock/skills), adapted to OutSystems.
 
 **Design only.** This skill does not create or change entities. When the proposal is accepted, `outsystems-crud-conventions` builds it, and only when the user asks.

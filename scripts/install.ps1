@@ -1,7 +1,14 @@
 <#
 .SYNOPSIS
     Installs (or updates) the OutSystems AI Skills into the local
-    Claude Code skills directory.
+    skills directory of Claude Code or Google Antigravity.
+
+.PARAMETER Target
+    Which agent to install for: 'claude' (default, ~/.claude/skills) or
+    'antigravity' (~/.gemini/config/skills).
+
+.PARAMETER Destination
+    Install into this folder instead (e.g. a workspace's .agents\skills).
 
 .PARAMETER Source
     Path to a local checkout of this repository to copy from, instead of
@@ -11,17 +18,29 @@
     powershell -ExecutionPolicy Bypass -File scripts\install.ps1
 
 .EXAMPLE
-    powershell -ExecutionPolicy Bypass -File scripts\install.ps1 -Source .
+    powershell -ExecutionPolicy Bypass -File scripts\install.ps1 -Target antigravity
+
+.EXAMPLE
+    powershell -ExecutionPolicy Bypass -File scripts\install.ps1 -Source . -Destination C:\work\my-app\.agents\skills
 #>
 [CmdletBinding()]
 param(
+    [ValidateSet("claude", "antigravity")]
+    [string]$Target = "claude",
+    [string]$Destination,
     [string]$Source
 )
 
 $ErrorActionPreference = "Stop"
 
 $RepoUrl = "https://github.com/maiurnarendra/outsystems-ai-skills.git"
-$SkillsDir = Join-Path $env:USERPROFILE ".claude\skills"
+if ($Destination) {
+    $SkillsDir = $Destination
+} elseif ($Target -eq "antigravity") {
+    $SkillsDir = Join-Path $env:USERPROFILE ".gemini\config\skills"
+} else {
+    $SkillsDir = Join-Path $env:USERPROFILE ".claude\skills"
+}
 
 $TmpDir = $null
 try {
@@ -45,15 +64,15 @@ try {
 
     New-Item -ItemType Directory -Path $SkillsDir -Force | Out-Null
     foreach ($skill in Get-ChildItem $SourceSkills -Directory) {
-        $Target = Join-Path $SkillsDir $skill.Name
-        if (Test-Path $Target) {
-            Remove-Item -Recurse -Force $Target
+        $TargetDir = Join-Path $SkillsDir $skill.Name
+        if (Test-Path $TargetDir) {
+            Remove-Item -Recurse -Force $TargetDir
         }
-        Copy-Item -Recurse -Force $skill.FullName $Target
+        Copy-Item -Recurse -Force $skill.FullName $TargetDir
         Write-Host "Installed '$($skill.Name)'"
     }
 
-    Write-Host "Done. Start a new Claude Code session for the skills to load."
+    Write-Host "Done. Skills are in $SkillsDir. Start a new agent session for them to load."
 }
 finally {
     if ($TmpDir -and (Test-Path $TmpDir)) {

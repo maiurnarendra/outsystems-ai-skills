@@ -12,7 +12,7 @@ This repository packages a set of OutSystems development standards as **Agent Sk
 - **Reviews get shorter.** Naming, layout and formatting issues are fixed before the code reaches a reviewer. A dedicated review skill checks existing code against the same rules.
 - **Architecture stays clean.** The agent knows which layer a module belongs to and refuses upward or side references.
 - **Your standards, versioned.** Rules live in plain Markdown under version control. Change a rule, publish, and every agent picks it up.
-- **Tool-neutral.** Built on the open `SKILL.md` and `AGENTS.md` formats. Optimized for Claude Code, also usable with GitHub Copilot, Cursor, Kiro and Codex.
+- **Tool-neutral.** Built on the open `SKILL.md` and `AGENTS.md` formats. Optimized for Claude Code, also usable with Google Antigravity, GitHub Copilot, Cursor, Kiro and Codex.
 
 ## What it is
 
@@ -20,7 +20,7 @@ This repository packages a set of OutSystems development standards as **Agent Sk
 | --- | --- |
 | **Type** | Seven standards skills that are content only (Markdown, nothing runs), one data-model design skill, `outsystems-data-model`, that interviews you before entities are built, one debugging skill, `outsystems-debugging`, that diagnoses errors, slowness and front-end issues read-only, one code-review skill, `outsystems-code-review`, that reads your modules through the Service Studio MCP without changing them, and one deployment skill, `outsystems-lifetime-deploy`, that calls the LifeTime API with a small PowerShell script, only when you use it. |
 | **Platforms** | OutSystems 11 and OutSystems Developer Cloud (ODC). |
-| **Works with** | Claude Code (plugin or skill install), GitHub Copilot, Cursor, Kiro, Codex CLI. |
+| **Works with** | Claude Code (plugin or skill install), Google Antigravity, GitHub Copilot, Cursor, Kiro, Codex CLI. |
 | **Pairs with** | Any OutSystems MCP server: the MCP gives the agent access to your app, these skills govern what it writes. Also useful on its own for design and review conversations. |
 | **Status** | Actively maintained. See [Releases](https://github.com/maiurnarendra/outsystems-ai-skills/releases) for the latest version and [CHANGELOG.md](CHANGELOG.md) for what changed. |
 | **Tested** | Standards skills run against a real OutSystems 11 module through the Service Studio MCP. Results in [evals/results/](evals/results/). |
@@ -57,8 +57,8 @@ This repository packages a set of OutSystems development standards as **Agent Sk
 
 | Layer | Cross-tool standard? | In this repo |
 | --- | --- | --- |
-| **Skills** | ✅ `SKILL.md`: Claude Code, Cursor, Kiro, Codex | [`skills/`](skills/), one folder per topic |
-| **Agent instructions** | ✅ `AGENTS.md`: Copilot, Cursor, Kiro, Codex, Claude Code | [`AGENTS.md`](AGENTS.md), plus [`.github/copilot-instructions.md`](.github/copilot-instructions.md) for Copilot |
+| **Skills** | ✅ `SKILL.md`: Claude Code, Antigravity, Cursor, Kiro, Codex | [`skills/`](skills/), one folder per topic |
+| **Agent instructions** | ✅ `AGENTS.md`: Antigravity, Copilot, Cursor, Kiro, Codex, Claude Code | [`AGENTS.md`](AGENTS.md), plus [`.github/copilot-instructions.md`](.github/copilot-instructions.md) for Copilot |
 | **Claude Code plugin** | Claude Code only | [`.claude-plugin/`](.claude-plugin/), installable with `/plugin` |
 | **Evals** | Runner-agnostic | [`evals/`](evals/), test prompts that prove the skills change the agent's output |
 
@@ -82,9 +82,9 @@ outsystems-ai-skills/
 ├─ .claude-plugin/                          # Claude Code plugin + marketplace manifests
 ├─ .github/copilot-instructions.md          # Copilot always-on instructions
 ├─ scripts/
-│  ├─ install.ps1 / install.sh              # copy skills into ~/.claude/skills
+│  ├─ install.ps1 / install.sh              # copy skills into ~/.claude/skills or ~/.gemini/config/skills
 │  └─ validate.ps1                          # structural checks before a release
-├─ setup-docs/other-agents.md               # Copilot, Cursor, Kiro, Codex setup
+├─ setup-docs/other-agents.md               # Antigravity, Copilot, Cursor, Kiro, Codex setup
 ├─ AGENTS.md                                # cross-tool summary of the rules
 ├─ CLAUDE.md                                # routing for Claude Code
 ├─ CONTRIBUTING.md                          # how to change a rule and release
@@ -150,6 +150,7 @@ Install both. The [OutSystems 11 MCP](https://github.com/OutSystems/outsystems11
 | --- | --- | --- |
 | **GitHub Copilot (VS Code / CLI)** | `AGENTS.md` and `.github/copilot-instructions.md` | [setup-docs/other-agents.md](setup-docs/other-agents.md#github-copilot) |
 | **Cursor** | `skills/` copied to `.cursor/skills/`, or `AGENTS.md` | [setup-docs/other-agents.md](setup-docs/other-agents.md#cursor) |
+| **Google Antigravity** | `install.ps1 -Target antigravity` (or `install.sh --target antigravity`) copies `skills/` to `~/.gemini/config/skills/`; `AGENTS.md` in the workspace root. On-demand skills run with `/<skill-name>` | [setup-docs/other-agents.md](setup-docs/other-agents.md#google-antigravity) |
 | **Kiro** | `skills/` copied to `~/.kiro/skills/`, or `AGENTS.md` | [setup-docs/other-agents.md](setup-docs/other-agents.md#kiro) |
 | **Codex CLI** | `skills/` copied to `~/.codex/skills/`, or `AGENTS.md` | [setup-docs/other-agents.md](setup-docs/other-agents.md#codex-cli) |
 

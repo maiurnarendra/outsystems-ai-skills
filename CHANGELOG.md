@@ -2,6 +2,18 @@
 
 All notable changes to this project are documented here. Versions follow [semantic versioning](https://semver.org/).
 
+## [0.11.0] - 2026-10-29
+
+### Added
+- **Google Antigravity support.**
+  - `install.ps1 -Target antigravity` / `install.sh --target antigravity` installs the skills into `~/.gemini/config/skills/`. `-Destination` / `--destination` installs into any folder, e.g. a workspace's `.agents/skills/`.
+  - Setup section in `setup-docs/other-agents.md`: skills, `AGENTS.md`, on-demand skills with `/<skill-name>`, and the Service Studio MCP.
+- On-demand guard in `outsystems-code-review`, `outsystems-data-model` and `outsystems-debugging`: agents without `disable-model-invocation` (Antigravity, Cursor, Codex, Kiro) start them only when the user asks.
+- Eval scenario `trigger-negative-02`.
+
+### Changed
+- README lists Antigravity in "Works with", the repository table and "Using other coding agents".
+
 ## [0.10.0] - 2026-10-28
 
 ### Added
