@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented here. Versions follow [semantic versioning](https://semver.org/).
 
+## [0.11.1] - 2026-10-29
+
+### Changed
+- README: new "Principles" section (the skills assist, developers decide; reading is the default; every rule has a reason; team workflows stay out of this repository).
+- README: "Key capabilities" split into Standards, Practices and Tooling.
+
 ## [0.11.0] - 2026-10-29
 
 ### Added

@@ -14,6 +14,15 @@ This repository packages a set of OutSystems development standards as **Agent Sk
 - **Your standards, versioned.** Rules live in plain Markdown under version control. Change a rule, publish, and every agent picks it up.
 - **Tool-neutral.** Built on the open `SKILL.md` and `AGENTS.md` formats. Optimized for Claude Code, also usable with Google Antigravity, GitHub Copilot, Cursor, Kiro and Codex.
 
+## Principles
+
+This repository is about **OutSystems knowledge**: what good OutSystems code looks like, and how a good OutSystems developer designs, reviews and debugs it. It is not an autopilot.
+
+- **The skills assist; developers decide.** The agent proposes, the developer chooses. Design, review and debugging skills end with a recommendation, never with a change nobody asked for.
+- **Reading is the default.** Skills that touch a live model read it. They change it only when you ask, and they never publish or deploy on their own.
+- **Every rule has a reason.** Each standard says why it exists, with a good and a bad example, so a team can disagree with it and change it.
+- **Your process stays yours.** How your team moves a story through tracker, build, review and test is not a best practice, so it is not in here. Keep that kind of workflow in your own skills and call these from it.
+
 ## What it is
 
 | Aspect | Details |
@@ -27,18 +36,36 @@ This repository packages a set of OutSystems development standards as **Agent Sk
 
 ## Key capabilities
 
+The skills come in three kinds:
+
+- **Standards**: the rulebook. What good OutSystems code looks like. Applied automatically whenever the agent writes or reviews code.
+- **Practices**: how a senior OutSystems developer works, applying the standards. Run only when you ask for them.
+- **Tooling**: automates a routine task. Runs only when you ask for it.
+
+### Standards
+
 | Skill | What the agent will do |
 | --- | --- |
 | [**Module naming**](skills/outsystems-module-naming/SKILL.md) | Name every module with its layer suffix: `_CS`, `_BL`, `_CW`, `_FS`, `_IS`, `_Lib`, `_TH`, `_Pat`, `_API`, and the mobile variants `_MCS`, `_MBL`, `_MCW`, `_MTH` (a leading `M` means mobile). Place each element in the right module. |
 | [**Architecture**](skills/outsystems-architecture/SKILL.md) | Apply the 3-layer Architecture Canvas (End-user, Core, Foundation), block upward and End-user-to-End-user references, and fix common violations. |
 | [**Action flows**](skills/outsystems-action-flows/SKILL.md) | Name actions in the singular (`GetStructure`, `GetStructureById`) and place Get actions in `_BL`. Lay flows out top to bottom and left to right with straight, non-crossing connectors. If branches go True down, False right, with no `not` in conditions and a question or Boolean name as the label (`Has structure?`, `IsToComplete`). Write Descriptions on every public action, input and output. |
-| [**Data model design**](skills/outsystems-data-model/SKILL.md) | Before any entity exists, interview you one question at a time, each with a recommended answer: the business term and its glossary entry, the owning `_CS`, static vs regular entity, foreign key vs real many-to-many, delete rules (Protect / Delete / Ignore), attributes and lengths, indexes, volume and sensitive data. Checks the existing model and `GLOSSARY.md` first, then writes an entity proposal with a diagram and the reasons for each decision. Runs only when you ask for it. |
 | [**Entities & CRUD**](skills/outsystems-crud-conventions/SKILL.md) | Name entities in CamelCase (`CustomerAddress`), use `_` only for many-to-many (`User_Role`), and generate `Entity_CreateOrUpdate` (input `Source`, output `Id`, separate create/update branches, audit fields filled), `Entity_Delete` (input `Id`) and, when needed, an `Entity_DeleteAll` bulk delete in Advanced SQL. |
 | [**Advanced SQL**](skills/outsystems-advanced-sql/SKILL.md) | Format queries with uppercase clauses at the left margin, tab-indented contents, leading commas, explicit `INNER JOIN`, CamelCase aliases and parameters instead of hard-coded values. `TOP` for SQL Server, `LIMIT` for ODC/PostgreSQL. |
 | [**Integrations**](skills/outsystems-integrations/SKILL.md) | Keep every external system behind its own `_IS`. Consumed methods and imported structures stay private; public actions have business names (`GetWeatherForecast`) and return your own structure with **only the attributes you need**: if the API returns 30 fields and you use 4, the structure has 4. Types are converted at the boundary and external errors become User Exceptions. |
 | [**Standards review**](skills/outsystems-standards-review/SKILL.md) | Review a module, action, entity or query against all of the above and report findings by severity with a concrete fix for each. |
+
+### Practices
+
+| Skill | What the agent will do |
+| --- | --- |
+| [**Data model design**](skills/outsystems-data-model/SKILL.md) | Before any entity exists, interview you one question at a time, each with a recommended answer: the business term and its glossary entry, the owning `_CS`, static vs regular entity, foreign key vs real many-to-many, delete rules (Protect / Delete / Ignore), attributes and lengths, indexes, volume and sensitive data. Checks the existing model and `GLOSSARY.md` first, then writes an entity proposal with a diagram and the reasons for each decision. Runs only when you ask for it. |
+| [**Code review**](skills/outsystems-code-review/SKILL.md) | Review the code changed for a work item on two independent axes: **Standards** (all the standards above) and **Spec** (each acceptance criterion marked Met, Partly met, Not found or Needs testing, plus changes the story didn't ask for). Reads the modules live through the Service Studio MCP, never edits them, and ends with a verdict: Ready, Needs changes or Blocked. Runs only when you ask for it. |
 | [**Debugging**](skills/outsystems-debugging/SKILL.md) | Take a bug to a confirmed root cause before anything is changed. Three tracks: **runtime errors** (Service Center / ODC logs, error IDs), **performance** (slow screens, queries, timers, integrations, always measured before and after) and **front-end**, especially JavaScript (`$parameters`, `$actions`, `$resolve`, OnReady/OnRender/OnDestroy, leaking listeners and intervals, Forge widgets, CSS). Gathers evidence from logs, the browser and the model (read-only), tests one hypothesis at a time, and reports root cause, fix and regression check. Catalogues of known errors and patterns grow with every bug solved. Runs only when you ask for it. |
-| [**Code review**](skills/outsystems-code-review/SKILL.md) | Review the code changed for a work item on two independent axes: **Standards** (all of the above) and **Spec** (each acceptance criterion marked Met, Partly met, Not found or Needs testing, plus changes the story didn't ask for). Reads the modules live through the Service Studio MCP, never edits them, and ends with a verdict: Ready, Needs changes or Blocked. Runs only when you ask for it. |
+
+### Tooling
+
+| Skill | What the agent will do |
+| --- | --- |
 | [**LifeTime deploy**](skills/outsystems-lifetime-deploy/SKILL.md) | Read the work items that are ready for test from your tracker (Jira, Azure DevOps, GitHub Issues or none), find the modules in their comments, tag the changed apps and create **one** LifeTime deployment plan with the item keys as notes. Starts it only when you confirm. Tracker, environments and any after-deploy status/assignee changes come from your own config file. |
 
 ### What you can ask
