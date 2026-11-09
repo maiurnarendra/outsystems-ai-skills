@@ -41,6 +41,9 @@ To review the code changed for a work item against both the standards and its ac
 - [ ] No disconnected or commented-out nodes
 - [ ] No hard-coded environment values
 - [ ] No queries inside loops
+- [ ] Built-in functions, System list actions (`ListAny`, `ListAll`, `ListIndexOf`, `ListFilter`) and Aggregate filters used before a For Each; no For Each + If that only searches, checks or filters a list
+- [ ] Simple conditional values use `If()` in an expression, not an If node with two Assigns; repeated Ifs on one value use a Switch
+- [ ] JavaScript nodes only for what OutSystems can't do (DOM, browser APIs, a library): small, no business logic, a comment saying why
 
 **CRUD**
 - [ ] Entities CamelCase and singular; many-to-many named `EntityA_EntityB`

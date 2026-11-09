@@ -1,5 +1,5 @@
 {
-  "version": "0.11.1",
+  "version": "0.12.0",
   "description": "Prompts that exercise each OutSystems standard. Run each prompt with and without the skills installed and score the expectations. A rule is proven only when the with-skill run passes and the without-skill run does not.",
   "scenarios": [
     {
@@ -87,6 +87,27 @@
         "The For Each Cycle connector leaves to the right",
         "When the cycle finishes the flow continues down",
         "The loop returns to the For Each with straight connectors, using Dummy Assigns, without crossing"
+      ]
+    },
+    {
+      "id": "action-flow-06",
+      "skill": "outsystems-action-flows",
+      "prompt": "Write a Client Action that receives a list of order lines and returns whether any line is out of stock, the total amount rounded to 2 decimals and formatted as text, and the index of the first line with a discount.",
+      "expectations": [
+        "Uses ListAny for the out-of-stock check, ListIndexOf for the first discounted line, and built-in functions (Round / FormatDecimal) for the total",
+        "No For Each with an If inside used only to set a flag or an index",
+        "No JavaScript node: everything is done with OutSystems expressions, list actions and flow nodes",
+        "Any For Each that remains does work on each item (e.g. summing amounts), and its Cycle connector goes right"
+      ]
+    },
+    {
+      "id": "action-flow-07",
+      "skill": "outsystems-action-flows",
+      "prompt": "After the user saves the form, set the focus on the first empty mandatory input and show the label 'Priority' as 'High' when the order is urgent and 'Normal' otherwise.",
+      "expectations": [
+        "The label value uses If(IsUrgent, \"High\", \"Normal\") in an expression or one Assign, not an If node with two Assigns and not JavaScript",
+        "JavaScript (if used) is limited to setting the focus, or an OutSystems UI / Forge client action is suggested first",
+        "Any JavaScript node is small, takes its inputs through $parameters, holds no business logic and has a comment saying why OutSystems can't do it"
       ]
     },
     {
