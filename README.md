@@ -195,6 +195,7 @@ Issues and pull requests are welcome. Every proposed rule needs a *good* and a *
   - `outsystems-code-review` on his `code-review` skill, which reviews a change on two independent axes, Standards and Spec. OutSystems has no git diff, so the scope comes from the developer or the work item, and modules are read live through the Service Studio MCP.
   - `outsystems-data-model` on his `domain-modeling` and `grilling` skills: a one-question-at-a-time interview, with a recommended answer each time, that challenges terms against a glossary. Here the decisions are OutSystems ones: owning `_CS`, static vs regular entity, many-to-many, delete rules.
   - `outsystems-debugging` on his `diagnosing-bugs` skill: reproduce, narrow down, one hypothesis at a time, then fix. Here the evidence comes from Service Center / ODC logs, the browser and the model, with OutSystems catalogues for runtime errors, performance and JavaScript.
+- **Duarte Oliveira**, for the "built-in functions first, JavaScript last" rule in `outsystems-action-flows`, which came from a real case where an agent wrote a client action almost entirely in JavaScript.
 - [**OutSystems 11 MCP**](https://github.com/OutSystems/outsystems11-mcp): the model for this repository's structure and README.
 
 ## License

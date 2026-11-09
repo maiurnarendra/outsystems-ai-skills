@@ -5,7 +5,7 @@ All notable changes to this project are documented here. Versions follow [semant
 ## [0.12.0] - 2026-11-09
 
 ### Added
-- `outsystems-action-flows`: "Built-in functions first, JavaScript last". Order of preference: expression with built-in functions, System list actions, Aggregate, flow nodes, JavaScript. No For Each with an If inside only to search, check or filter a list (use `ListAny`, `ListAll`, `ListIndexOf`, `ListFilter`, Aggregate filters); `If()` for simple conditional values; JavaScript nodes only for what OutSystems can't do, small, with no business logic and a comment saying why.
+- `outsystems-action-flows`: "Built-in functions first, JavaScript last" (suggested by Duarte Oliveira). Order of preference: expression with built-in functions, System list actions, Aggregate, flow nodes, JavaScript. No For Each with an If inside only to search, check or filter a list (use `ListAny`, `ListAll`, `ListIndexOf`, `ListFilter`, Aggregate filters); `If()` for simple conditional values; JavaScript nodes only for what OutSystems can't do, small, with no business logic and a comment saying why.
 - Matching checklist items in `outsystems-standards-review`, non-negotiable 8 in `AGENTS.md` (Advanced SQL, Integrations and Deployments are now 9, 10 and 11), and eval scenarios `action-flow-06` and `action-flow-07`.
 
 ### Changed
