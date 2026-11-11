@@ -1,6 +1,6 @@
 ---
 name: outsystems-module-naming
-description: OutSystems module naming conventions and layer suffixes (_CS, _BL, _CW, _FS, _IS, _TH, _Lib, _API and the mobile variants _MCS, _MBL, _MCW, _MTH). Use when creating, renaming, or reviewing OutSystems modules, applications or libraries, or when deciding which module a new element belongs in.
+description: OutSystems module naming conventions and layer suffixes (_CS, _BL, _Eng, _CW, _FS, _IS, _TH, _Lib, _API, the Timer Engine app and the mobile variants _MCS, _MBL, _MCW, _MTH). Use when creating, renaming, or reviewing OutSystems modules, applications or libraries, or when deciding which module a new element belongs in.
 ---
 
 # OutSystems module naming
@@ -22,9 +22,10 @@ Every module name tells the reader two things: **which business domain** it belo
 | Suffix | Layer | Contents | Mobile variant |
 |---|---|---|---|
 | *(none)* or `_Portal` / `_Backoffice` | End-user | Screens, flows, UI for one user persona or app. Consumes Core; exposes nothing. | `_App` / `_Mobile` |
+| `_Eng` | Core | **Engine**: complex calculations and report generation for a domain, and the recurrent timers that drive them. Sits **above `_BL`** (and so above `_CS`). | n/a |
 | `_CW` | Core | **Core Widgets**: reusable business blocks (e.g. `CustomerCard`). No Get actions. | `_MCW` |
 | `_BL` | Core | **Business Logic**: Get actions (`GetStructure`, `GetStructureById`), processes, orchestration, rules spanning several entities. | `_MBL` |
-| `_CS` | Core | **Core Services**: entities (exposed read-only) and their `_CreateOrUpdate` / `_Delete` / optional `_DeleteAll` wrappers. Nothing else. | `_MCS` |
+| `_CS` | Core | **Core Services**: entities (exposed read-only), their `_CreateOrUpdate` / `_Delete` wrappers, and specific update or delete actions on those entities (`Invoice_UpdateStatusAll`). No Get actions, no logic across domains. | `_MCS` |
 | `_API` | Core | Exposed REST/SOAP APIs for external consumers. No business logic, only calls `_BL`/`_CS`. | n/a |
 | `_Sync` | Core | Offline synchronisation logic for mobile. | n/a |
 | `_IS` | Foundation | **Integration Services**: wraps one external system (REST consume, SOAP, SAP, DB connection). | n/a |
@@ -41,11 +42,14 @@ Mobile variants exist because Client-side entities, Client Actions and offline s
 
 1. Entity definitions live **only** in `_CS` (or `_MCS` for local storage). Never define entities in `_BL`, `_CW` or End-user modules.
 2. A `_CS` module owns one business concept and its closely related entities (e.g. `Order` + `OrderLine`). Split when a module grows beyond one concept.
-3. **`_CS` holds only entities and their `_CreateOrUpdate` / `_Delete` / optional `_DeleteAll` wrappers.** Get actions (`GetStructure`, `GetStructureById`, `GetStructureBy<Input>`) go in **`_BL`**, never in `_CS` or `_CW`.
+3. **`_CS` holds only entities, their `_CreateOrUpdate` / `_Delete` wrappers, and specific update or delete actions on its own entities** (`Invoice_DeleteAll`, `Invoice_UpdateStatusAll`; see `outsystems-crud-conventions`). Get actions (`GetStructure`, `GetStructureById`, `GetStructureBy<Input>`) go in **`_BL`**, never in `_CS` or `_CW`.
 4. Logic that coordinates more than one `_CS` belongs in `_BL`.
 5. If something has no business meaning and could be reused by another company, it belongs in Foundation (`_FS`, `_Lib`, `_IS`, `_Pat`, `_TH`).
 6. **`_FS` modules are agnostic to the business model**: they never contain entities with data and never reference Core modules. They receive everything they need through action inputs.
-7. One external system = one `_IS` module. Normalise its data into your own structures there, with only the attributes the application needs; never let the external structure leak into Core. See `outsystems-integrations`.
+7. **`_Eng` is for heavy work**: complex calculations and report generation, plus the recurrent timers that drive them. Ordinary recurrent timers go in the domain's `_BL`. See `outsystems-timers`.
+8. **One-off timers** (migrations, data fixes, backfills) go in the **Timer Engine** app: a single module, `TimerEngine`, with no suffix like an End-user module, holding all of the factory's temporary timers. Nothing references it.
+9. **`TimerControl_CS`** (optional) holds a shared `TimerCheckpoint` entity (checkpoint and kill switch) for long-running timers. Create it only when the factory has no such entity under another name; ask first.
+10. One external system = one `_IS` module. Normalise its data into your own structures there, with only the attributes the application needs; never let the external structure leak into Core. See `outsystems-integrations`.
 
 ## ODC note
 
@@ -62,4 +66,6 @@ In ODC, modules become **apps** and **libraries**. Keep the same suffixes:
 | `Billing_BL` | `Billing_BL_v2` | Version in name |
 | `Salesforce_IS` | `Integrations_IS` | One system per `_IS` |
 | `DateTime_Lib` | `Utils` | No domain, no suffix |
+| `Billing_Eng` | `BillingCalc`, `Billing_Engine` | Standard suffix, written exactly `_Eng` |
+| `TimerEngine` | `Timers_BL`, `Temp_Timers` | One app for one-off timers, nothing references it |
 | `CustomerPortal` | `Customer_UI_Final` | End-user names describe the app, not the state |

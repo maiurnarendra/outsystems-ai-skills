@@ -1,5 +1,5 @@
 {
-  "version": "0.12.0",
+  "version": "0.13.0",
   "description": "Prompts that exercise each OutSystems standard. Run each prompt with and without the skills installed and score the expectations. A rule is proven only when the with-skill run passes and the without-skill run does not.",
   "scenarios": [
     {
@@ -118,6 +118,16 @@
         "Rejects the entity in _FS because _FS is agnostic to the business model and holds no entities with data",
         "Moves GetCustomerById to Customer_BL (Get actions belong in _BL, not _CS)",
         "States _CS holds only entities and their _CreateOrUpdate / _Delete (and optional _DeleteAll) wrappers"
+      ]
+    },
+    {
+      "id": "module-naming-04",
+      "skill": "outsystems-module-naming",
+      "prompt": "Our Billing domain needs a module for complex commission calculations and monthly report generation. What do I call it and what can reference it?",
+      "expectations": [
+        "Names it Billing_Eng (suffix written exactly _Eng)",
+        "Places _Eng in the Core layer above _BL: _Eng may reference Billing_BL and Billing_CS, but _BL, _CS and _CW must not reference _Eng",
+        "End-user modules (and Timer Engine) may reference it"
       ]
     },
     {
@@ -360,6 +370,50 @@
         "Refuses returning the full API response",
         "Adds one attribute (e.g. Humidity) to the own structure and maps it in the _IS action",
         "Notes that only consumers using the new attribute need changes"
+      ]
+    },
+    {
+      "id": "timer-01",
+      "skill": "outsystems-timers",
+      "prompt": "User story: as a finance user I want the system to send a reminder e-mail every night for invoices that are more than 30 days overdue. The Billing domain has Invoice_CS and Billing_BL. Plan the implementation.",
+      "expectations": [
+        "Recognises that the story needs a recurrent timer, scheduled at night",
+        "Places the timer in Billing_BL (not in Invoice_CS, not in an End-user module, not in Timer Engine)",
+        "Treats volume as able to grow and applies the long-running pattern: time limit 5 minutes before the timeout with a wake, batches with Max. Records, commit per record",
+        "Asks whether the factory already has an entity for timer progress / a kill switch before suggesting TimerControl_CS; uses a kill switch read before every batch and a no-progress guard",
+        "A failing invoice is logged and marked, not retried forever",
+        "Names the timer after its action (TimerSendInvoiceReminder / SendInvoiceReminder) and writes a 'Timer' block in the plan"
+      ]
+    },
+    {
+      "id": "timer-02",
+      "skill": "outsystems-timers",
+      "prompt": "We need to fill the new DueDate attribute for the 2 million existing invoices once, calculated from InvoiceDate + PaymentTerm. Where and how do I build this?",
+      "expectations": [
+        "Recognises a one-off timer and places it in the Timer Engine app, not in Billing_BL",
+        "Says nothing may reference Timer Engine and the timer (and references only it used) is deleted after the job is done",
+        "Prefers a bulk Advanced SQL action in Invoice_CS (e.g. Invoice_UpdateDueDateAll with a BatchSize input) over a For Each over 2 million records",
+        "Runs the bulk action in batches with commit, time limit, wake, checkpoint and kill switch"
+      ]
+    },
+    {
+      "id": "timer-03",
+      "skill": "outsystems-timers",
+      "prompt": "When a user approves an order, we want to send the confirmation e-mail for that order. Should this be a timer?",
+      "expectations": [
+        "Says this is not a timer: it is per-record work triggered by an event",
+        "Suggests doing it in the approval action, or a process (BPT / Light process) if it must be asynchronous",
+        "Does not create a recurrent timer that polls for approved orders without a reason"
+      ]
+    },
+    {
+      "id": "timer-04",
+      "skill": "outsystems-timers",
+      "prompt": "Build a nightly timer that recalculates the credit score of every customer. We already have a JobControl entity in Job_CS with JobName and LastProcessedId.",
+      "expectations": [
+        "Reuses Job_CS.JobControl as the checkpoint entity instead of creating TimerControl_CS or a second entity",
+        "Proposes adding the missing attributes to JobControl (a kill switch such as IsEnabled, and a last run status) rather than a new entity",
+        "Applies the long-running pattern: time limit with wake, batches with Max. Records, commit per record, no-progress guard"
       ]
     },
     {

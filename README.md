@@ -27,7 +27,7 @@ This repository is about **OutSystems knowledge**: what good OutSystems code loo
 
 | Aspect | Details |
 | --- | --- |
-| **Type** | Seven standards skills that are content only (Markdown, nothing runs), one data-model design skill, `outsystems-data-model`, that interviews you before entities are built, one debugging skill, `outsystems-debugging`, that diagnoses errors, slowness and front-end issues read-only, one code-review skill, `outsystems-code-review`, that reads your modules through the Service Studio MCP without changing them, and one deployment skill, `outsystems-lifetime-deploy`, that calls the LifeTime API with a small PowerShell script, only when you use it. |
+| **Type** | Eight standards skills that are content only (Markdown, nothing runs), one data-model design skill, `outsystems-data-model`, that interviews you before entities are built, one debugging skill, `outsystems-debugging`, that diagnoses errors, slowness and front-end issues read-only, one code-review skill, `outsystems-code-review`, that reads your modules through the Service Studio MCP without changing them, and one deployment skill, `outsystems-lifetime-deploy`, that calls the LifeTime API with a small PowerShell script, only when you use it. |
 | **Platforms** | OutSystems 11 and OutSystems Developer Cloud (ODC). |
 | **Works with** | Claude Code (plugin or skill install), Google Antigravity, GitHub Copilot, Cursor, Kiro, Codex CLI. |
 | **Pairs with** | Any OutSystems MCP server: the MCP gives the agent access to your app, these skills govern what it writes. Also useful on its own for design and review conversations. |
@@ -52,6 +52,7 @@ The skills come in three kinds:
 | [**Entities & CRUD**](skills/outsystems-crud-conventions/SKILL.md) | Name entities in CamelCase (`CustomerAddress`), use `_` only for many-to-many (`User_Role`), and generate `Entity_CreateOrUpdate` (input `Source`, output `Id`, separate create/update branches, audit fields filled), `Entity_Delete` (input `Id`) and, when needed, an `Entity_DeleteAll` bulk delete in Advanced SQL. |
 | [**Advanced SQL**](skills/outsystems-advanced-sql/SKILL.md) | Format queries with uppercase clauses at the left margin, tab-indented contents, leading commas, explicit `INNER JOIN`, CamelCase aliases and parameters instead of hard-coded values. `TOP` for SQL Server, `LIMIT` for ODC/PostgreSQL. |
 | [**Integrations**](skills/outsystems-integrations/SKILL.md) | Keep every external system behind its own `_IS`. Consumed methods and imported structures stay private; public actions have business names (`GetWeatherForecast`) and return your own structure with **only the attributes you need**: if the API returns 30 fields and you use 4, the structure has 4. Types are converted at the boundary and external errors become User Exceptions. |
+| [**Timers**](skills/outsystems-timers/SKILL.md) | Recognise when a story needs a timer ("every night", "send reminders", "backfill existing data"), decide the kind and place it: recurrent in the domain's `_BL` (or `_Eng` for heavy calculations), one-off in the **Timer Engine** app, bulk database work as `<Entity>_<Verb>All` in `_CS`. Long-running timers stop 5 minutes before the timeout and wake themselves, work in batches, commit per record, and keep a checkpoint and a **kill switch** in a shared entity: the one your factory already has, or `TimerControl_CS` if there is none. |
 | [**Standards review**](skills/outsystems-standards-review/SKILL.md) | Review a module, action, entity or query against all of the above and report findings by severity with a concrete fix for each. |
 
 ### Practices
@@ -74,6 +75,7 @@ The skills come in three kinds:
 - *"/outsystems-data-model Design the entities for expense claims with approvals."*
 - *"Write the CreateOrUpdate and Delete wrappers for the Invoice entity."*
 - *"Write an Advanced SQL query that returns the top 50 customers by order total."*
+- *"Every night, send a reminder for invoices that are 30 days overdue."*: the agent places and designs the timer.
 - *"Consume the weather API in Weather_IS. I only need date, temperature, condition and wind speed."*
 - *"Review the Order_CS module against our OutSystems standards."*
 - *"/outsystems-debugging The order list takes 12 seconds to load in Test."*
@@ -99,6 +101,7 @@ outsystems-ai-skills/
 │  ├─ outsystems-crud-conventions/SKILL.md  # entity naming and CRUD wrappers
 │  ├─ outsystems-advanced-sql/SKILL.md      # SQL formatting and safety
 │  ├─ outsystems-integrations/SKILL.md      # _IS modules: private API, lean own structures
+│  ├─ outsystems-timers/SKILL.md            # when a story needs a timer, where it goes, what it must have
 │  ├─ outsystems-standards-review/SKILL.md  # review checklist and report
 │  ├─ outsystems-code-review/SKILL.md       # work item review: Standards + Spec, via the Service Studio MCP
 │  ├─ outsystems-debugging/                 # root cause first: SKILL.md + reference/ (runtime errors, performance, front-end)

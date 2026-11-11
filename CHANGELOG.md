@@ -2,6 +2,23 @@
 
 All notable changes to this project are documented here. Versions follow [semantic versioning](https://semver.org/).
 
+## [0.13.0] - 2026-11-11
+
+### Added
+- `outsystems-timers`: recognise when a user story needs a timer, decide the kind (recurrent, on demand, one-off, or not a timer), place it and design it.
+  - Placement: recurrent timers in the domain's `_BL` (or `_Eng` for heavy calculations and reports); one-off timers in the **Timer Engine** app, which nothing references and whose timers are deleted once done; bulk database work as `<Entity>_<Verb>All` in `_CS`.
+  - Long-running pattern: time limit 5 minutes before the timeout with a wake, batches with Max. Records, commit per record, checkpoint and **kill switch** in a shared entity (the agent asks whether the factory already has one; `TimerControl_CS` is suggested only when it doesn't), no-progress guard, per-record error handling, logging.
+  - Bulk pattern, configuration (schedule, priority, timeout), naming (`TimerSendInvoiceReminder`), on-demand wake, and a "Timer" block for plans.
+  - Based on the OutSystems training sessions on timers, adapted to this repository's layout and naming rules.
+- `_Eng` suffix in `outsystems-module-naming` and `outsystems-architecture`: Core layer, above `_BL`, for complex calculations and report generation.
+- Eval scenarios `timer-01` to `timer-04` and `module-naming-04`.
+
+### Changed
+- `_CS` can hold specific update and delete actions on its own entities (`Invoice_UpdateStatus`, `Invoice_UpdateStatusAll`, `Invoice_DeleteAll`), with bulk ones as one Advanced SQL node (`outsystems-crud-conventions`, `outsystems-module-naming`, `AGENTS.md`).
+- Timer checks in `outsystems-standards-review`; `outsystems-code-review` loads `outsystems-timers` for its Standards axis.
+- `outsystems-debugging` timer fixes now point to the long-running pattern.
+- `AGENTS.md`: new non-negotiable 11 (Timers); Deployments is now 12.
+
 ## [0.12.0] - 2026-11-09
 
 ### Added

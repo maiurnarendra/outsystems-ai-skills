@@ -25,7 +25,7 @@
 | **Refresh storms** in Reactive: aggregates/data actions refreshed in OnParametersChanged, on every change, or in loops | The same request repeated many times | Network tab: repeated identical requests | Refresh only when the relevant input changed; Fetch = Only on demand where it fits |
 | **Everything fetched At Start** | Slow first paint | Data sources with Fetch = At start that the user may never see | Fetch on demand (tabs, popups, expandable areas) |
 | **Large lists rendered at once** | Browser freezes, long tasks in the Performance tab | Rows rendered vs rows visible | Pagination or virtualised grid (OutSystems Data Grid) |
-| **Timer processes everything in one run** | Timer timeouts, long locks, deadlocks with screens | Rows per run, run duration | Batches (e.g. 500–1,000 rows), `CommitTransaction` per batch, `WakeTimer` to continue, a time budget per run |
+| **Timer processes everything in one run** | Timer timeouts, long locks, deadlocks with screens | Rows per run, run duration | The long-running pattern in `outsystems-timers`: batches of 100–1,000 rows, commit per record, wake before the time limit, checkpoint and kill switch |
 | **External call on every request** | Each screen load waits for the external system | Integrations log frequency and duration | Cache (`Cache in Minutes` on the `_IS` action) where data allows; call once per screen |
 | **Heavy session or viewstate** (Traditional Web) | Every request is slow and large | Session variables holding lists or records | Keep Ids in session, not records or lists |
 

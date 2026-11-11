@@ -17,6 +17,7 @@ To review the code changed for a work item against both the standards and its ac
 | Entity wrappers and parameters | `outsystems-crud-conventions` |
 | SQL nodes | `outsystems-advanced-sql` |
 | Integration modules (`_IS`) | `outsystems-integrations` |
+| Timers | `outsystems-timers` |
 
 ## Checklist
 
@@ -25,7 +26,8 @@ To review the code changed for a work item against both the standards and its ac
 - [ ] No upward or End-user-to-End-user references
 - [ ] No cycles between Core modules
 - [ ] Entities only in `_CS`/`_MCS`, exposed read-only
-- [ ] `_CS` contains only entities and `_CreateOrUpdate` / `_Delete` / optional `_DeleteAll` wrappers
+- [ ] `_CS` contains only entities, their `_CreateOrUpdate` / `_Delete` wrappers and specific update/delete actions on its own entities (`<Entity>_<Verb><What>`, bulk ones as one Advanced SQL node)
+- [ ] `_Eng` only for complex calculations and report generation; nothing below it (`_BL`, `_CS`, `_CW`) references it
 - [ ] Get actions live in `_BL`, not in `_CS` or `_CW`
 - [ ] `_FS` modules have no entities with data and no Core references
 
@@ -56,6 +58,14 @@ To review the code changed for a work item against both the standards and its ac
 - [ ] `_CreateOrUpdate` branches on `Source.Id <> NullIdentifier()` with separate create/update flows (no built-in `CreateOrUpdate<Entity>`)
 - [ ] Create branch sets `CreatedOn`/`CreatedBy` and `UpdatedOn`/`UpdatedBy`; update branch sets `UpdatedOn`/`UpdatedBy` and keeps the created values
 - [ ] Wrappers validate `Source` before writing
+
+**Timers**
+- [ ] Placed by kind: recurrent in the domain's `_BL` (or `_Eng` for heavy calculations/reports); one-off in Timer Engine; nothing references Timer Engine
+- [ ] Long-running timers: time limit (timeout minus 5 min) with `Wake<Timer>` before it, batches with Max. Records, commit per record
+- [ ] A row in the factory's shared checkpoint entity (or `TimerControl_CS` when there was none): checkpoint updated before each commit, kill switch read before every batch; no second checkpoint entity created
+- [ ] No-progress guard; one failing record is logged, marked and skipped, not retried forever
+- [ ] Same change on many rows done by a bulk `_CS` action (Advanced SQL), not a For Each
+- [ ] Start/end logging; schedule outside business hours when heavy; timer named `Timer<Action>`
 
 **SQL**
 - [ ] Header comment present

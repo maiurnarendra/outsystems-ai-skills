@@ -10,8 +10,10 @@ Follow the **Architecture Canvas**: three layers, dependencies only point down o
 ```
 ┌──────────────────────────────────────────────┐
 │ End-user   CustomerPortal, Backoffice, _App  │  ← UI, user stories
+│            TimerEngine (one-off timers)      │
 ├──────────────────────────────────────────────┤
-│ Core       _CW  →  _BL  →  _CS    _API       │  ← business concepts
+│ Core       _Eng →  _BL  →  _CS    _API       │  ← business concepts
+│            _CW  →  _BL                       │
 ├──────────────────────────────────────────────┤
 │ Foundation _IS  _FS  _Lib  _TH  _Pat         │  ← business-agnostic
 └──────────────────────────────────────────────┘
@@ -27,10 +29,12 @@ Follow the **Architecture Canvas**: three layers, dependencies only point down o
 
 1. **No upward references.** Foundation never references Core; Core never references End-user.
 2. **No side references between End-user modules.** If two apps need the same screen or block, move it to `_CW` (business) or `_Pat` (generic). Navigate between End-user apps with external URLs, not screen references.
-3. **No cycles in Core.** Preferred direction inside Core: `_CW → _BL → _CS`. A `_CS` must never reference a `_BL`.
-4. **Foundation is business-agnostic.** If you need a business entity in a Foundation module, the code is in the wrong layer.
-5. **Entities are exposed read-only.** `Public = Yes`, `Expose Read Only = Yes`. Writes go through CRUD wrappers (see `outsystems-crud-conventions`).
-6. **`_API` modules hold no logic.** They map external contracts to calls on `_BL`/`_CS`.
+3. **No cycles in Core.** Preferred direction inside Core: `_CW → _BL → _CS` and `_Eng → _BL → _CS`. A `_CS` must never reference a `_BL`, and a `_BL` must never reference an `_Eng`.
+4. **`_Eng` sits above `_BL`.** It holds complex calculations and report generation; End-user modules and Timer Engine may reference it, `_BL`, `_CS` and `_CW` may not.
+5. **Nothing references Timer Engine.** It sits on top like an End-user module and references only public `_BL`, `_CS` or `_Eng` actions. Long-running timers reference one shared checkpoint and kill-switch entity: the factory's existing one, or `TimerControl_CS` when there is none. See `outsystems-timers`.
+6. **Foundation is business-agnostic.** If you need a business entity in a Foundation module, the code is in the wrong layer.
+7. **Entities are exposed read-only.** `Public = Yes`, `Expose Read Only = Yes`. Writes go through CRUD wrappers (see `outsystems-crud-conventions`).
+8. **`_API` modules hold no logic.** They map external contracts to calls on `_BL`/`_CS`.
 
 ## Design process for a new application
 
@@ -56,4 +60,6 @@ Follow the **Architecture Canvas**: three layers, dependencies only point down o
 | `GetStructureById` defined in `_CS` or `_CW` | Move it to the domain's `_BL` |
 | `_FS` module defines an entity with data, or references a Core module | Move the entity to a `_CS`; pass data to the `_FS` through action inputs |
 | `_IS` returns the external system's raw structures to End-user | Map to own structures inside `_IS` or a `_BL` |
+| `_BL` calls an `_Eng` action | Move the shared part down into `_BL`, or have `_Eng` call `_BL` instead |
+| A module references a timer in Timer Engine | Move the logic it needs into a `_BL`; Timer Engine only consumes |
 | Two Core modules reference each other | Extract the shared part into a third module lower in the chain |

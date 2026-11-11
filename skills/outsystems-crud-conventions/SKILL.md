@@ -1,6 +1,6 @@
 ---
 name: outsystems-crud-conventions
-description: OutSystems entity and attribute naming (CamelCase, singular, many-to-many with underscore, Is/Has Booleans), default entity properties (Public, Expose Read Only), static entity rules (Static folder, Is AutoNumber = No) and CRUD wrapper conventions (<Entity>_CreateOrUpdate, <Entity>_Delete) with their Source/Id inputs. Use when creating or renaming entities, writing CRUD wrapper actions in Core Services (_CS) modules, or naming action inputs and outputs that carry entity data.
+description: OutSystems entity and attribute naming (CamelCase, singular, many-to-many with underscore, Is/Has Booleans), default entity properties (Public, Expose Read Only), static entity rules (Static folder, Is AutoNumber = No) and CRUD wrapper conventions (<Entity>_CreateOrUpdate, <Entity>_Delete) with their Source/Id inputs, and specific or bulk update and delete actions in _CS (<Entity>_DeleteAll, <Entity>_UpdateStatusAll). Use when creating or renaming entities, writing CRUD wrapper actions in Core Services (_CS) modules, or naming action inputs and outputs that carry entity data.
 ---
 
 # OutSystems entities and CRUD
@@ -44,7 +44,7 @@ Writes from other modules go through the `_CS` wrappers, never through the built
 
 Entities are `Public = Yes` and exposed **read-only** from `_CS` modules. All writes go through public wrapper actions in the same `_CS`, so validation and audit logic live in one place.
 
-Every entity has these two wrappers, plus an optional bulk delete, named `<EntityName>_<Operation>`:
+Every entity has these two wrappers, named `<EntityName>_<Operation>`, plus optional specific actions (see [Specific update and delete actions](#specific-update-and-delete-actions)):
 
 | Action | Wraps | Input | Output |
 |---|---|---|---|
@@ -54,7 +54,7 @@ Every entity has these two wrappers, plus an optional bulk delete, named `<Entit
 
 For a many-to-many entity the full entity name is kept: `User_Role_CreateOrUpdate`, `User_Role_Delete`, `User_Role_DeleteAll`.
 
-These are the **only** actions in a `_CS` module. Get actions (`GetCustomer`, `GetCustomerById`) belong in the `_BL` module (see `outsystems-action-flows`).
+A `_CS` module holds only these wrappers and the specific update and delete actions below. Get actions (`GetCustomer`, `GetCustomerById`) belong in the `_BL` module (see `outsystems-action-flows`).
 
 ### `_DeleteAll` (bulk delete)
 
@@ -70,6 +70,21 @@ DELETE FROM
 
 - Action `<Entity>_DeleteAll`, SQL node `DeleteAll<Entity>`, header comment, formatting per `outsystems-advanced-sql`.
 - A filtered bulk delete adds a `WHERE` clause with parameters and keeps the same names (`Customer_DeleteAll` with a `CountryId` input, for example).
+
+### Specific update and delete actions
+
+Besides the two wrappers, a `_CS` can hold **specific** update or delete actions on its own entities, when a process needs a narrower or bulk change than `_CreateOrUpdate`:
+
+| Action | Does | Implementation |
+|---|---|---|
+| `Invoice_UpdateStatus` | Changes one invoice's status (inputs `Id`, `InvoiceStatusId`) | `Get<Entity>ForUpdate` + `Update<Entity>`, update log fields set |
+| `Invoice_UpdateStatusAll` | Changes the status of every invoice that matches (inputs: filter, new status, `BatchSize`) | **One Advanced SQL node**, never a For Each |
+| `Invoice_DeleteAll` | Deletes every invoice, or every one that matches | One Advanced SQL node |
+
+- Named `<Entity>_<Verb><What>`, with `All` at the end when it changes many rows.
+- Bulk actions are what timers call for set-based work; they take a `BatchSize` input when a timer runs them in batches (see `outsystems-timers`).
+- A bulk update sets `UpdatedOn` / `UpdatedBy` in the same statement.
+- Still no business process logic: they change data, the `_BL` or the timer decides when.
 
 Rules:
 - Do **not** create separate `_Create` / `_Update` wrappers; `_CreateOrUpdate` covers both.
