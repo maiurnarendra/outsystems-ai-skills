@@ -33,7 +33,7 @@ This repository is mostly **content, not code**: Markdown skills that teach a co
 ## Writing a good skill
 
 - **The `description` decides when the skill loads.** Name the concrete things a developer would ask about (entity, wrapper, SQL node, module suffix). Keep it under 1024 characters (Kiro's limit). `name` must be lowercase-with-hyphens and equal the folder name.
-- **Keep `SKILL.md` focused.** Aim for under ~150 lines. If a topic grows, move detail to a `reference/` file inside the skill folder and link it.
+- **Keep `SKILL.md` focused.** Under ~8 KB, with the description under ~600 characters (`validate.ps1` warns above that). Rules stay in `SKILL.md`; diagrams, long tables and examples go to a `reference/` file inside the skill folder, linked from the rule. Every loaded token costs on every session that uses the skill.
 - **Tables and examples beat prose.** Agents copy patterns they see.
 - **Don't duplicate rules across skills.** Link to the other skill instead (e.g. "see `outsystems-action-flows`").
 

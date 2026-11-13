@@ -1,6 +1,6 @@
 ---
 name: outsystems-debugging
-description: Diagnose OutSystems bugs to a confirmed root cause before fixing - runtime errors (Service Center / ODC logs, error IDs, stack traces), performance problems (slow screens, queries, timers and integrations) and front-end issues, especially JavaScript in Reactive and Mobile apps (JavaScript nodes, $parameters, $actions, $resolve, OnReady/OnRender/OnDestroy, listeners and intervals, Forge widgets, CSS). Gathers evidence from logs, the browser console and the model (read-only through the Service Studio MCP), tests one hypothesis at a time, and reports the root cause, a fix that follows the team's standards, and a regression check. Use when the user reports an error, a crash, wrong data, a slow screen or a front-end problem in an OutSystems app.
+description: Diagnose OutSystems bugs to a confirmed root cause before fixing - runtime errors (Service Center / ODC logs, error IDs), performance (slow screens, queries, timers, integrations) and front-end issues, especially JavaScript in Reactive and Mobile apps. Gathers evidence from logs, the browser and the model (read-only), tests one hypothesis at a time, and reports root cause, fix and regression check. Use when the user reports an error, wrong data, a slow screen or a front-end problem.
 disable-model-invocation: true
 ---
 

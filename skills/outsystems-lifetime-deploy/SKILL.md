@@ -1,11 +1,14 @@
 ---
 name: outsystems-lifetime-deploy
-description: Promote OutSystems 11 work items between environments with the LifeTime Deployment API. Reads ready work items from a configurable tracker (Jira, Azure DevOps, GitHub Issues or none), finds the modules to deploy in their comments, maps modules to LifeTime applications, tags new versions, creates one deployment plan with the item keys as notes, and starts it only when the user confirms. Use when a user story or bug is ready for test, when asked to create a deployment plan, promote or deploy work items or modules to a test environment, or to check a LifeTime deployment.
+description: Promote OutSystems 11 work items between environments with the LifeTime Deployment API - reads ready work items from a configurable tracker (Jira, Azure DevOps, GitHub Issues or none), finds the modules in their comments, tags new versions and creates one deployment plan with the item keys as notes, started only when the user confirms. Use when the user asks to deploy work items or modules to a test environment, or to check a LifeTime deployment.
+disable-model-invocation: true
 ---
 
 # LifeTime deployment from work items
 
 Turns "these work items are ready for test" into one LifeTime deployment plan, through the **LifeTime Deployment API v2** (faster and repeatable compared with clicking through the LifeTime UI). Works with any work tracker: everything specific to a team lives in a local config file, never in this skill.
+
+> **On demand only.** Start this skill only when the user types `/outsystems-lifetime-deploy` or explicitly asks to create or check a deployment. Agents without `disable-model-invocation` (Antigravity, Cursor, Codex, Kiro) may load it on their own; if the user did not ask for it, don't start it: say in one line that it is available.
 
 ## 0. Configuration (required)
 

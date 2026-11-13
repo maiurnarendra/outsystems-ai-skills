@@ -1,206 +1,78 @@
 ---
 name: outsystems-action-flows
-description: Standards for OutSystems action flows (Server, Client and Service Actions) - action naming (singular, GetStructure / GetStructureById), flow layout top to bottom and left to right, If branches (True down, False right, no "not"), For Each cycles (Cycle connector to the right, exit down), Boolean names starting with Is/Has, no diagonal or crossing connectors, Dummy assigns for routing, Assign and Switch labels, built-in functions and System list actions before loops and JavaScript (no For Each + If to search or filter a list, JavaScript nodes only for what OutSystems can't do), variables, exception handling, and required comments and descriptions. Use when creating, editing or reviewing any OutSystems action logic.
+description: Standards for OutSystems action logic (Server, Client and Service Actions) - singular action names and Get actions in _BL, flow layout (top to bottom, True down, False right, For Each Cycle to the right, straight connectors, Dummy routing), If/Assign/Switch labels, Is/Has Booleans, built-in functions and list actions before loops and JavaScript, descriptions, comments and exceptions. Use when creating, editing or reviewing any OutSystems action logic.
 ---
 
 # OutSystems action flows
 
-## Action naming
+Core rules. Diagrams, full label tables and examples are in [reference/layout.md](reference/layout.md); built-in function and JavaScript examples in [reference/builtins.md](reference/builtins.md). Open them when drawing a flow or when a rule below is unclear.
 
-1. **CamelCase, verb + noun, always singular**: `CalculateOrderTotal`, `SendWelcomeEmail`, `ValidateStructure`. Never plural: `GetStructure`, not `GetStructures`.
-2. Avoid vague verbs: `Process`, `Handle`, `Do`, `Manage` must be followed by a precise noun or replaced.
-3. Client actions that react to UI events: `<Widget><Event>` e.g. `SaveButtonOnClick`, `CountryDropdownOnChange`.
-4. Boolean-returning actions start with `Is` or `Has`: `IsCustomerActive`, `HasOpenInvoice`.
-5. CRUD wrappers (`<Entity>_CreateOrUpdate`, `<Entity>_Delete`) follow `outsystems-crud-conventions`.
+## Naming
 
-### Get actions (reading from the database)
+- Actions: CamelCase verb + noun, **always singular**: `CalculateOrderTotal`, `GetStructure` (never `GetStructures`).
+- UI event client actions: `<Widget><Event>` (`SaveButtonOnClick`). Boolean-returning actions start with `Is`/`Has`.
+- CRUD wrappers follow `outsystems-crud-conventions`.
 
-| Retrieves | Name | Example |
-|---|---|---|
-| Records of an entity (list, optional filters) | `Get<Entity>` | `GetStructure` |
-| One record by its identifier | `Get<Entity>ById` | `GetStructureById` (input `StructureId`) |
-| Records by one other input | `Get<Entity>By<Input>` | `GetStructureByCode`, `GetStructureByParentId` |
+| Retrieves | Name |
+|---|---|
+| Records of an entity | `Get<Entity>` |
+| One record by Id | `Get<Entity>ById` (input `<Entity>Id`) |
+| Records by another input | `Get<Entity>By<Input>` |
 
-- The entity part is **singular**, even when the action returns a list.
-- Get actions live in the **`_BL`** module of the domain. Not in `_CS` (which only holds entities and their `_CreateOrUpdate` / `_Delete` / `_DeleteAll` wrappers) and not in `_CW` (which holds widgets). See `outsystems-module-naming`.
-- Aggregates and SQL nodes inside a flow follow the same pattern: `GetStructureById`, `GetStructureByParentId`.
+Get actions live in the domain's **`_BL`**, never in `_CS` or `_CW`. Aggregates and SQL nodes use the same names.
 
 ## Flow layout
 
-The flow reads **top to bottom and left to right**.
+1. Top to bottom, left to right. Start at the top, Ends at the bottom; the happy path is one straight vertical line.
+2. **If: True goes down, False goes right.** False is the exception path and ends in its own End or Raise Exception.
+3. Only vertical and horizontal connectors: no diagonals, no crossings, nothing behind nodes. Route around logic with empty Assigns labelled **`Dummy`** at the corners.
+4. **For Each: the Cycle connector leaves to the right**; the body runs top to bottom on the right and returns above the loop through `Dummy` corners; when the cycle ends the flow **continues down**.
+5. At most ~20 nodes per flow and 3 nested Ifs; beyond that use a Switch or extract an action.
+6. Guard clauses first, then the work.
 
-1. Start at the top, End(s) at the bottom. The happy path is one **straight vertical line**.
-2. **If branches: True goes down, False goes right.** The False branch is the exception/error path and ends in its own End or Raise Exception node on the right.
-3. **Only vertical and horizontal connectors.** No diagonal lines. Align nodes on the same column/row so connectors are straight.
-4. **Connectors never cross other connectors or pass behind nodes.**
-5. When a connector has to go around existing logic (for example, returning to a For Each to close a cycle), route it with **Dummy Assign nodes** (empty Assigns labelled `Dummy`) placed at the corners, so every segment stays straight and nothing crosses.
-6. **Maximum ~20 nodes per flow.** Beyond that, extract a well-named action. A flow must fit on one screen.
-7. Maximum **3 levels of nested Ifs**. Deeper → use a Switch, or extract an action.
-8. Validate inputs first ("guard clauses"), then do the work.
+## Conditions and labels
 
-```
-          Start
-            │
-     GetStructureById
-            │
-    ◇ Has structure? ──False──► Raise StructureNotFoundException
-            │ True
-    ◇ Is structure active? ──False──► Raise StructureInactiveException
-            │ True
-     Assign "Set totals"
-            │
-           End
-```
-
-## For Each cycles
-
-1. The **Cycle connector always leaves the For Each to the right**. Never up, never down, never diagonal.
-2. The loop body is laid out on the right, top to bottom, and returns to the For Each with straight connectors, using `Dummy` Assigns at the corners.
-3. When the cycle finishes, the flow **continues down** from the For Each.
-
-```
-     GetStructure
-          │     Dummy ◄─────────────────────────── Dummy
-          │       │                                  ▲
-          ▼       ▼                                  │
-       For Each ──Cycle──► Assign "Set total"        │
-          │                        │                 │
-          │              StructureLine_CreateOrUpdate│
-          │                        │                 │
-          │                      Dummy ──────────────┘
-          ▼
-         End
-```
-
-The return path goes right, up and back left **above** the loop, then down into the For Each, so it never crosses the Cycle connector or the exit line.
-
-## If conditions
-
-- **Write conditions so that True is the expected path** and the error goes right as False.
-- **Never use `not`** in an If condition. Compare explicitly instead:
-
-| Situation | Good condition (label) | Bad |
-|---|---|---|
-| List must have data | `GetStructure.List.Empty = False` (`Has structure?`) | `not GetStructure.List.Empty` |
-| Record must exist | `GetStructureById.List.Empty = False` (`Has structure?`) | `not GetStructureById.List.Empty` |
-| Flag must be set | `Structure.IsActive = True` (`Is structure active?`) | `not Structure.IsActive` |
-
-With `GetStructure.List.Empty = False`, an empty list makes the condition False and the flow leaves to the right; data present continues down.
-
-### If labels
-
-An If node is labelled in one of two ways:
-
-1. **As a question** ending in `?`: `Has structure?`, `Is order approved?`
-2. **As a Boolean name**, exactly like a Boolean variable: CamelCase starting with `Is` or `Has`: `IsToComplete`, `HasValue`, `IsEmpty`, `HasStructure`.
-
-Either way, the label describes what **True** means, and the True branch goes down. Pick the label that matches the condition:
-
-| Condition | True means | Label |
-|---|---|---|
-| `GetStructure.List.Empty = False` | there is data | `HasStructure` or `Has structure?` |
-| `Structure.IsCompleted = False` | still to complete | `IsToComplete` |
-| `GetStructure.List.Empty = True` | list is empty (only when empty is the expected path) | `IsEmpty` |
-
-Use one style consistently within a module.
-
-## Node labels (mandatory)
-
-Every node must be labelled so the flow reads without opening properties.
-
-| Node | Label rule | Good | Bad |
-|---|---|---|---|
-| **If** | Either a yes/no question ending in `?`, or a Boolean-style name like a Boolean variable (`Is`/`Has` + CamelCase). See [If labels](#if-labels). | `Has structure?`, `Is order approved?`, `HasStructure`, `IsToComplete`, `HasValue` | `If`, `If1`, `Check`, `Structure` |
-| **Switch** | The subject being switched on; each branch label is the case | `Order status?` → `Draft`, `Submitted`, `Otherwise` | `Switch1` |
-| **Assign** | What is being set | `Set totals`, `Map structure to output` | `Assign1` |
-| **Dummy Assign** | `Dummy` (used only for connector routing) | `Dummy` | `Assign5` |
-| **Aggregate / SQL** | `Get<Entity>`, `Get<Entity>ById`, `Get<Entity>By<Input>` (singular) | `GetOrderByCustomerId` | `GetOrders2`, `GetOrdersByCustomer` |
-| **For Each** | Leave default but iterate a well-named list; Cycle connector to the right | — | — |
-| **Exception Handler** | Name of the handled exception | `DatabaseException` | — |
+- Write conditions so **True is the expected path**. **Never `not`**: `GetStructure.List.Empty = False`, not `not GetStructure.List.Empty`.
+- Label every If as a question (`Has structure?`) or a Boolean name (`HasStructure`, `IsToComplete`) describing what True means; one style per module.
+- Switch: the subject (`Order status?`), each branch named by its case. Assign: what it sets (`Set totals`). Routing Assign: `Dummy`. Aggregate/SQL: `Get…` names. Exception handler: the exception's name.
+- Never leave default labels (`If1`, `Assign1`, `Aggregate1`).
 
 ## Variables and parameters
 
-- CamelCase: `OrderTotal`, `CustomerId`. No Hungarian prefixes (`strName`, `iCount`).
-- Identifiers: `<Entity>Id`. Lists: `<Entity>List`. Records: `<Entity>`.
-- **Booleans** (variables, inputs, outputs, attributes) are CamelCase and **always start with `Is` or `Has`**: `IsNew`, `IsEmpty`, `IsToDelete`, `HasValue`, `HasError`.
-
-| Good | Bad |
-|---|---|
-| `IsToDelete` | `ToDelete`, `DeleteFlag`, `bDelete` |
-| `HasValue` | `ValueExists`, `Valued` |
-| `IsNew` | `New`, `NewRecord`, `isNew` |
-| `IsEmpty` | `Empty`, `EmptyList` |
-- Never hard-code environment values: use Site Properties / Settings (ODC) or Static Entities.
-- Mark inputs **Mandatory = Yes** unless there is a real default.
-
-## Comments and descriptions (mandatory)
-
-1. **Every public action, input and output has a Description.** The action description states *what* it does, *preconditions*, and *exceptions raised*. Template:
-   ```
-   Creates an order for the given customer and returns its Id.
-   Pre: customer must be active.
-   Raises: OrderValidationException when lines are empty.
-   ```
-2. Add a **Comment node** next to any non-obvious logic explaining *why*, not *what*. Keep it to 1–3 lines.
-3. Add a comment at the top of flows longer than ~10 nodes summarising the steps.
-4. **No commented-out / disconnected nodes** left in the flow. Use version control (Service Studio history / ODC revisions) instead.
-5. Mark temporary workarounds with `TODO:` + ticket reference, e.g. `TODO: JIRA-123 remove after SAP fix`.
-
-## Exception handling
-
-- Raise **User Exceptions** with business meaning (`StructureNotFoundException`) instead of generic ones.
-- Server/Service Actions in Core handle infrastructure errors only where they can add context; let business exceptions propagate.
-- End-user screens have a global or screen-level handler that shows a friendly message and logs details.
-- Never swallow an exception silently: an empty handler must at least log.
-- Use **Abort Transaction = Yes** in handlers that must roll back writes.
+- CamelCase; `<Entity>Id`, `<Entity>List`, `<Entity>`.
+- **Booleans** (variables, inputs, outputs, attributes) start with `Is` or `Has`: `IsNew`, `HasValue`.
+- No hard-coded environment values: Site Properties / Settings (ODC) or Static Entities.
+- Inputs `Mandatory = Yes` unless there is a real default.
 
 ## Built-in functions first, JavaScript last
 
-Write logic in OutSystems, not around it. Pick the first option that does the job:
+Pick the first option that does the job:
+1. An expression with built-in functions (`If()`, `Substr`, `Trim`, `AddDays`, `Round`, `FormatDecimal`, `FormatDateTime`, `TextToInteger`, …).
+2. A System list action: `ListAny`, `ListAll`, `ListIndexOf`, `ListFilter`, `ListSort`, `ListDistinct`, `ListAppendAll`, `ListRemove`.
+3. The Aggregate itself: filters, sorts, calculated attributes, Group By, Max. Records.
+4. Flow nodes.
+5. A JavaScript node, only for what OutSystems can't do.
 
-| # | Use | Examples |
-|---|---|---|
-| 1 | **An expression with built-in functions** | Text: `Substr`, `Index`, `Replace`, `Trim`, `ToUpper`, `Length`. Date: `AddDays`, `DiffDays`, `NewDate`, `Year`. Math: `Round`, `Trunc`, `Max`, `Min`, `Mod`. Format and conversion: `FormatDecimal`, `FormatDateTime`, `TextToInteger`, `IntegerToText`. Conditional value: `If(condition, a, b)` |
-| 2 | **A System list action** | `ListAny`, `ListAll`, `ListIndexOf`, `ListFilter`, `ListSort`, `ListDistinct`, `ListAppendAll`, `ListRemove`, `ListClear` |
-| 3 | **The Aggregate itself** | Filters, sorts, calculated attributes, Group By, Max. Records: let the database do it |
-| 4 | **Flow nodes** | Assign, If, Switch, For Each, laid out as above |
-| 5 | **A JavaScript node** | Only when OutSystems has no way to do it (see below) |
+- **No For Each with an If inside only to search, check or filter a list**: `ListAny` / `ListAll` / `ListIndexOf` / `ListFilter`, or filter in the Aggregate. A For Each is for doing **work** on each item.
+- One of two values → `If(condition, a, b)` in one Assign, not an If node with two Assigns. Many branches on one value → a Switch.
+- **JavaScript nodes** only for the DOM, browser APIs or a third-party library (check OutSystems UI and Forge client actions first): one small job, inputs through `$parameters`, no business logic, never a rewrite of a built-in, and a comment saying why.
+- Server and client actions don't offer the same built-ins: check the System module for the action type before falling back to a loop.
 
-Server and client actions don't offer exactly the same functions and list actions. Check what the System module offers for the action type before falling back to a loop or to JavaScript.
+## Descriptions and comments
 
-### No loop with an If to search, filter or check a list
+- Every public action, input and output has a **Description**: what it does, preconditions, exceptions raised (template in [reference/layout.md](reference/layout.md#descriptions)).
+- Comment nodes explain **why**, in 1–3 lines; a summary comment on flows over ~10 nodes.
+- No disconnected or commented-out nodes. Workarounds marked `TODO:` with a ticket reference.
 
-A For Each with an If inside that sets a flag, an index or appends to a new list is a hand-written list action. Use the built-in:
+## Exceptions
 
-| Need | Bad | Good |
-|---|---|---|
-| Is any item X? | For Each → If → Assign `IsFound = True` | `ListAny(OrderList, OrderList.Current.IsUrgent = True)` |
-| Are all items X? | For Each → If → Assign `IsValid = False` | `ListAll(LineList, LineList.Current.Quantity > 0)` |
-| Where is item X? | For Each → If → Assign `Index = …` | `ListIndexOf(UserList, UserList.Current.Id = UserId)` |
-| Keep only items X | For Each → If → ListAppend to a new list | `ListFilter`, or filter in the Aggregate |
-| Records from the database that match X | Fetch all, then loop and filter | Filter in the Aggregate |
-| One of two values | If node → two Assigns | One Assign with `If(IsUrgent, "High", "Normal")` |
-| Many branches on the same value | Chain of Ifs testing the same variable | One Switch |
+- Raise **User Exceptions** with business meaning (`StructureNotFoundException`), never `Success`/`ErrorMessage` outputs.
+- Core handles infrastructure errors only where it adds context; business exceptions propagate.
+- Screens have a global or screen handler with a friendly message and a log.
+- Never swallow an exception: an empty handler at least logs. `Abort Transaction = Yes` when writes must roll back.
 
-A For Each is right when every item needs **work** (create a record, call an action, build an output). Not when it only needs a **question answered**.
+## Performance
 
-### JavaScript nodes: the exception
-
-Use a JavaScript node only for what OutSystems can't do: the browser or the DOM (focus, scroll, clipboard, local device APIs), or a third-party library. Before writing one, check the OutSystems UI and Forge client actions: many of these already exist.
-
-When you do:
-- **One small job per node.** Inputs through `$parameters`, results through output parameters.
-- **No business logic, no data shaping, no validation that matters.** Calculations, string and date handling, list operations and decisions belong in the flow, where they are visible, debuggable and reusable.
-- **Never rewrite a built-in in JavaScript** (formatting a date, rounding, trimming, searching a list).
-- A comment on the node says **why** OutSystems couldn't do it.
-
-| Bad | Good |
-|---|---|
-| A 60-line JavaScript node that loops the list, formats dates, totals amounts and decides which button to show | `ListFilter` + Assigns with `FormatDateTime` and `Round` + an If labelled `IsApprover`; JavaScript only for `element.focus()` |
-| JavaScript `toFixed(2)` on a total | `FormatDecimal(Total, 2, ".", ",")` in the expression |
-
-## Performance reminders
-
-- No Aggregates or SQL inside a For Each over large lists. Fetch once, then join/filter.
-- Fetch only needed attributes; set Max. Records on Aggregates feeding UI.
-- Server calls from Client Actions are expensive: batch them into one server action.
+- No Aggregate or SQL inside a For Each: fetch once, then use list actions.
+- Max. Records on Aggregates that feed the UI.
+- One server action per client interaction instead of several server calls.

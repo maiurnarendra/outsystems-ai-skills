@@ -1,6 +1,6 @@
 ---
 name: outsystems-crud-conventions
-description: OutSystems entity and attribute naming (CamelCase, singular, many-to-many with underscore, Is/Has Booleans), default entity properties (Public, Expose Read Only), static entity rules (Static folder, Is AutoNumber = No) and CRUD wrapper conventions (<Entity>_CreateOrUpdate, <Entity>_Delete) with their Source/Id inputs, and specific or bulk update and delete actions in _CS (<Entity>_DeleteAll, <Entity>_UpdateStatusAll). Use when creating or renaming entities, writing CRUD wrapper actions in Core Services (_CS) modules, or naming action inputs and outputs that carry entity data.
+description: OutSystems entities and _CS actions - entity and attribute naming (CamelCase, singular, A_B only for many-to-many, Is/Has Booleans), Public and Expose Read Only, static entities, <Entity>_CreateOrUpdate (Source/Id) and <Entity>_Delete wrappers, and specific or bulk actions such as <Entity>_UpdateStatusAll. Use when creating or renaming entities or attributes, or writing actions in a _CS module.
 ---
 
 # OutSystems entities and CRUD

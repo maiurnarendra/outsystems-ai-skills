@@ -67,7 +67,7 @@ The skills come in three kinds:
 
 | Skill | What the agent will do |
 | --- | --- |
-| [**LifeTime deploy**](skills/outsystems-lifetime-deploy/SKILL.md) | Read the work items that are ready for test from your tracker (Jira, Azure DevOps, GitHub Issues or none), find the modules in their comments, tag the changed apps and create **one** LifeTime deployment plan with the item keys as notes. Starts it only when you confirm. Tracker, environments and any after-deploy status/assignee changes come from your own config file. |
+| [**LifeTime deploy**](skills/outsystems-lifetime-deploy/SKILL.md) | Read the work items that are ready for test from your tracker (Jira, Azure DevOps, GitHub Issues or none), find the modules in their comments, tag the changed apps and create **one** LifeTime deployment plan with the item keys as notes. Starts it only when you confirm. Tracker, environments and any after-deploy status/assignee changes come from your own config file. Runs only when you ask for it. |
 
 ### What you can ask
 
@@ -96,12 +96,12 @@ outsystems-ai-skills/
 ├─ skills/
 │  ├─ outsystems-module-naming/SKILL.md     # module suffixes and placement
 │  ├─ outsystems-architecture/SKILL.md      # layers and dependency rules
-│  ├─ outsystems-action-flows/SKILL.md      # flows, If labels, comments, exceptions
+│  ├─ outsystems-action-flows/              # flows, labels, built-ins first: SKILL.md + reference/ (layout, built-ins)
 │  ├─ outsystems-data-model/SKILL.md        # entity design interview, glossary, proposal
 │  ├─ outsystems-crud-conventions/SKILL.md  # entity naming and CRUD wrappers
 │  ├─ outsystems-advanced-sql/SKILL.md      # SQL formatting and safety
 │  ├─ outsystems-integrations/SKILL.md      # _IS modules: private API, lean own structures
-│  ├─ outsystems-timers/SKILL.md            # when a story needs a timer, where it goes, what it must have
+│  ├─ outsystems-timers/                    # when a story needs a timer, where it goes: SKILL.md + reference/ (patterns, setup)
 │  ├─ outsystems-standards-review/SKILL.md  # review checklist and report
 │  ├─ outsystems-code-review/SKILL.md       # work item review: Standards + Spec, via the Service Studio MCP
 │  ├─ outsystems-debugging/                 # root cause first: SKILL.md + reference/ (runtime errors, performance, front-end)

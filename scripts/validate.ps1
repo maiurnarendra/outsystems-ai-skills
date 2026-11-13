@@ -8,6 +8,7 @@
     - every description is non-empty and at most 1024 characters (Kiro's limit)
     - every skill is mentioned in AGENTS.md and README.md
     - every eval scenario references an existing skill
+    - warns (does not fail) when a SKILL.md is over 8 KB or a description over 600 characters
 
 .EXAMPLE
     powershell -ExecutionPolicy Bypass -File scripts\validate.ps1
@@ -15,6 +16,7 @@
 $ErrorActionPreference = "Stop"
 $Root = Split-Path -Parent $PSScriptRoot
 $Errors = @()
+$Warnings = @()
 
 function Read-Json($path) { Get-Content $path -Raw -Encoding UTF8 | ConvertFrom-Json }
 
@@ -48,7 +50,10 @@ foreach ($dir in Get-ChildItem (Join-Path $Root "skills") -Directory) {
     if ($agents -notmatch [regex]::Escape($dir.Name)) { $Errors += "$($dir.Name): not referenced in AGENTS.md" }
     if ($readme -notmatch [regex]::Escape($dir.Name)) { $Errors += "$($dir.Name): not referenced in README.md" }
     $skillNames += $dir.Name
-    Write-Host ("OK  {0,-32} description {1,4} chars" -f $dir.Name, $desc.Length)
+    $size = (Get-Item -LiteralPath $file).Length
+    if ($size -gt 8192) { $Warnings += "$($dir.Name): SKILL.md is $size bytes (budget 8 KB); move detail to reference/" }
+    if ($desc.Length -gt 600) { $Warnings += "$($dir.Name): description is $($desc.Length) chars (budget 600); keep the triggers, drop the contents list" }
+    Write-Host ("OK  {0,-32} description {1,4} chars  SKILL.md {2,6} bytes" -f $dir.Name, $desc.Length, $size)
 }
 
 # Evals
@@ -58,6 +63,7 @@ foreach ($s in $evals.scenarios) {
     if (-not $s.expectations -or $s.expectations.Count -eq 0) { $Errors += "eval '$($s.id)': no expectations" }
 }
 Write-Host "Eval scenarios: $($evals.scenarios.Count)"
+$Warnings | ForEach-Object { Write-Host "WARN  $_" -ForegroundColor Yellow }
 
 if ($Errors.Count) {
     Write-Host ""

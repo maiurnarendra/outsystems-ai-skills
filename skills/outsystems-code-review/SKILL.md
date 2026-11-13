@@ -60,7 +60,7 @@ SQL nodes are inside the action JSON: review the statement text against `outsyst
 
 ## 3. Standards axis
 
-Load the standards skills that match the elements (`outsystems-module-naming`, `outsystems-architecture`, `outsystems-action-flows`, `outsystems-crud-conventions`, `outsystems-advanced-sql`, `outsystems-integrations`, `outsystems-timers`) and walk the checklist in `outsystems-standards-review`.
+Walk the checklist in `outsystems-standards-review`, and load only the standards skills for the kinds of element in scope: action logic → `outsystems-action-flows`; entities and `_CS` actions → `outsystems-crud-conventions`; SQL nodes → `outsystems-advanced-sql`; `_IS` modules → `outsystems-integrations`; timers → `outsystems-timers`; new modules or references → `outsystems-module-naming` / `outsystems-architecture`.
 
 Judge only from the code collected in step 2. Do not read the work item for this axis. Every finding cites the element and the node or attribute (`Order_CreateOrUpdate › If "If1"`), the rule broken, and a concrete fix.
 

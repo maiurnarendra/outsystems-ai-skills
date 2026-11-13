@@ -5,7 +5,7 @@ description: Review OutSystems modules, actions, entities or SQL against the tea
 
 # OutSystems standards review
 
-Review the target (module, action, entity, SQL node, or whole application) against the other skills in this plugin. Load the relevant ones before reviewing:
+Review the target (module, action, entity, SQL node, or whole application) against the checklist below. **Walk the checklist first.** Load a detailed skill only for the kinds of element in scope (no SQL node in scope → no `outsystems-advanced-sql`), and open it when a check fails or is unclear and you need the exact rule or fix:
 
 To review the code changed for a work item against both the standards and its acceptance criteria, reading the modules live from Service Studio, use `outsystems-code-review` instead; it uses this checklist for its Standards axis.
 

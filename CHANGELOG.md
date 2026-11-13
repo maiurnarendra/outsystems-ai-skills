@@ -2,6 +2,19 @@
 
 All notable changes to this project are documented here. Versions follow [semantic versioning](https://semver.org/).
 
+## [0.14.0] - 2026-11-13
+
+Lighter skills, same rules. Based on a token-usage analysis by a colleague.
+
+### Changed
+- `outsystems-action-flows` split into a core `SKILL.md` (13 KB → 5.4 KB) and `reference/layout.md` (diagrams, label tables, description template) and `reference/builtins.md` (built-in and JavaScript examples). Generic advice removed.
+- `outsystems-timers` split into a core `SKILL.md` (14.5 KB → 6.2 KB) and `reference/patterns.md` (long-running and bulk flows) and `reference/setup.md` (checkpoint entity, configuration, plan block).
+- `outsystems-standards-review` and `outsystems-code-review` walk the checklist first and load only the standards skills for the kinds of element in scope.
+- `outsystems-lifetime-deploy` is user-invoked (`disable-model-invocation: true` and an on-demand guard).
+- Shorter descriptions for `crud-conventions`, `integrations`, `debugging`, `lifetime-deploy`, `action-flows` and `timers`: contents lists out, trigger words kept.
+- `AGENTS.md` non-negotiables condensed from 12 to 9 (the rules agents break most); the skills keep the details.
+- `scripts/validate.ps1` warns when a `SKILL.md` is over 8 KB or a description over 600 characters; `CONTRIBUTING.md` explains the budget.
+
 ## [0.13.0] - 2026-11-11
 
 ### Added

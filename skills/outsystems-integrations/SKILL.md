@@ -1,6 +1,6 @@
 ---
 name: outsystems-integrations
-description: Standards for OutSystems integration modules (_IS) that consume external systems (REST, SOAP, SAP, external databases) - one _IS per system, consumed methods and imported structures kept private, public actions with business names that return the team's own lean structure with only the attributes the application needs, attribute mapping and type conversion, and translating external errors into User Exceptions. Use when consuming an API or service, creating or reviewing an _IS module, or deciding what an integration returns to Core.
+description: Standards for OutSystems integration modules (_IS) - one _IS per external system (REST, SOAP, SAP, external database), private consumed methods and structures, business-named public actions returning the team's own structure with only the attributes needed, type conversion, external errors as User Exceptions. Use when consuming an API or service, or creating or reviewing an _IS module.
 ---
 
 # OutSystems integrations (`_IS`)
