@@ -97,13 +97,13 @@ outsystems-ai-skills/
 │  ├─ outsystems-module-naming/SKILL.md     # module suffixes and placement
 │  ├─ outsystems-architecture/SKILL.md      # layers and dependency rules
 │  ├─ outsystems-action-flows/              # flows, labels, built-ins first: SKILL.md + reference/ (layout, built-ins)
-│  ├─ outsystems-data-model/SKILL.md        # entity design interview, glossary, proposal
-│  ├─ outsystems-crud-conventions/SKILL.md  # entity naming and CRUD wrappers
+│  ├─ outsystems-data-model/                # entity design interview: SKILL.md + reference/ (decisions, output)
+│  ├─ outsystems-crud-conventions/          # entities and _CS actions: SKILL.md + reference/ (examples, flows)
 │  ├─ outsystems-advanced-sql/SKILL.md      # SQL formatting and safety
 │  ├─ outsystems-integrations/SKILL.md      # _IS modules: private API, lean own structures
 │  ├─ outsystems-timers/                    # when a story needs a timer, where it goes: SKILL.md + reference/ (patterns, setup)
 │  ├─ outsystems-standards-review/SKILL.md  # review checklist and report
-│  ├─ outsystems-code-review/SKILL.md       # work item review: Standards + Spec, via the Service Studio MCP
+│  ├─ outsystems-code-review/               # work item review, Standards + Spec: SKILL.md + reference/ (collecting, report)
 │  ├─ outsystems-debugging/                 # root cause first: SKILL.md + reference/ (runtime errors, performance, front-end)
 │  └─ outsystems-lifetime-deploy/           # work items → LifeTime plan (SKILL.md, config.example.json, reference/, scripts/)
 ├─ evals/

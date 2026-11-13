@@ -5,153 +5,67 @@ description: OutSystems entities and _CS actions - entity and attribute naming (
 
 # OutSystems entities and CRUD
 
+Core rules. Good/bad naming tables are in [reference/examples.md](reference/examples.md); the `_CreateOrUpdate` flow, `_DeleteAll` SQL and specific-action examples in [reference/flows.md](reference/flows.md).
+
 ## Entity naming
 
-1. Entities are always named in **CamelCase** starting with a capital letter, singular: `Customer`, `CustomerAddress`, `OrderLine`.
-2. **Many-to-many** (junction) entities join the two entity names, each in CamelCase, separated by `_`: `User_Role`, `Product_Category`, `Customer_Segment`.
-3. Never plural, never technical prefixes or abbreviations: `Customers`, `tbl_Customer`, `Cust`, `customer` are all wrong.
-4. **No project/app prefixes with `_`** (`Sales_Customer`). The underscore must only ever mean many-to-many, so anyone reading `Sales_Customer` would wrongly assume a junction between `Sales` and `Customer`. The module already tells you which project the entity belongs to.
-5. Static entities follow the same naming rule (`OrderStatus`); see [Static entities](#static-entities).
+- **CamelCase, starting uppercase, singular**: `Customer`, `CustomerAddress`, `OrderLine`. No plurals, abbreviations or technical prefixes (`Customers`, `tbl_Customer`, `Cust`).
+- **Many-to-many** entities join both names with `_`: `User_Role`, `Product_Category`.
+- **`_` means many-to-many only.** Never project prefixes like `Sales_Customer`: it reads as a junction between `Sales` and `Customer`. The module already says which project it belongs to.
 
-## Default entity properties
+## Default properties
 
-Every entity, regular or static, is created with:
-
-| Property | Value |
-|---|---|
-| **Public** | `Yes` |
-| **Expose Read Only** | `Yes` |
-
-Writes from other modules go through the `_CS` wrappers, never through the built-in entity actions.
+Every entity, regular or static: **`Public = Yes`**, **`Expose Read Only = Yes`**. Other modules write only through the `_CS` actions, never through the built-in entity actions.
 
 ## Static entities
 
-1. **Folder:** in a `_CS` module, static entities are always placed in a folder named **`Static`** in the Data tab.
-2. **Identifier:** the `Id` attribute has **Is AutoNumber = No**. Ids are fixed values, so they are stable across environments.
-3. **Public = Yes** and **Expose Read Only = Yes**, like every entity.
-4. Records are CamelCase (`Draft`, `Submitted`) and are referenced by record (`Entities.OrderStatus.Draft`), never by hard-coded Id.
-5. Static entities have no `_CreateOrUpdate` / `_Delete` wrappers: their records are defined at design time.
-6. **The active flag is `IsActive`**, like every other Boolean attribute. Service Studio creates new static entities with the default attribute `Is_Active`; rename it to `IsActive` right after creating the entity. Existing static entities with `Is_Active` are reported by reviews and renamed when the module is next refactored.
+1. In a folder named **`Static`** in the `_CS` Data tab.
+2. `Id` with **`Is AutoNumber = No`**, so Ids are stable across environments.
+3. `Public = Yes`, `Expose Read Only = Yes`.
+4. Records in CamelCase (`Draft`, `Submitted`), referenced by record (`Entities.OrderStatus.Draft`), never by hard-coded Id.
+5. No `_CreateOrUpdate` / `_Delete` wrappers: records are defined at design time.
+6. The active flag is **`IsActive`**. Service Studio creates `Is_Active`: rename it right away; reviews report existing `Is_Active`.
 
-| Good | Bad | Why |
+## `_CS` actions
+
+All writes go through public actions in the entity's `_CS`, named `<Entity>_<Operation>`:
+
+| Action | Input | Output |
 |---|---|---|
-| `CustomerAddress` | `Customer_Address`, `customerAddress` | `_` is reserved for many-to-many; must start uppercase |
-| `User_Role` | `UserRole`, `UserRoles` | Junction entity needs the separator; singular |
-| `Product_Category` | `ProdCat` | No abbreviations |
-| `Customer`, `CustomerAddress` | `Sales_Customer`, `Sales_CustomerAddress` | Prefix + `_` reads as many-to-many but isn't |
+| `Customer_CreateOrUpdate` | `Source` (record of `Customer`, mandatory) | `Id` (`Customer Identifier`) |
+| `Customer_Delete` | `Id` (`Customer Identifier`, mandatory) | *(none)* |
 
-## CRUD wrapper actions
+- Many-to-many keeps the full name: `User_Role_CreateOrUpdate`, `User_Role_Delete`.
+- **No separate `_Create` / `_Update` wrappers.** The record input is always `Source`, the identifier input always `Id`.
+- Wrappers are `Public = Yes`; no `Success` / `ErrorMessage` outputs (raise a User Exception, see `outsystems-action-flows`); every input and output has a Description.
+- No business process logic: orchestration across entities belongs in `_BL`. Get actions belong in `_BL` too.
 
-Entities are `Public = Yes` and exposed **read-only** from `_CS` modules. All writes go through public wrapper actions in the same `_CS`, so validation and audit logic live in one place.
-
-Every entity has these two wrappers, named `<EntityName>_<Operation>`, plus optional specific actions (see [Specific update and delete actions](#specific-update-and-delete-actions)):
-
-| Action | Wraps | Input | Output |
-|---|---|---|---|
-| `Customer_CreateOrUpdate` | `CreateCustomer` / `UpdateCustomer` | `Source` (record of `Customer`, mandatory) | `Id` (`Customer Identifier`) |
-| `Customer_Delete` | `DeleteCustomer` | `Id` (`Customer Identifier`, mandatory) | *(none)* |
-| `Customer_DeleteAll` *(optional)* | Advanced SQL bulk delete | *(none)* | *(none)* |
-
-For a many-to-many entity the full entity name is kept: `User_Role_CreateOrUpdate`, `User_Role_Delete`, `User_Role_DeleteAll`.
-
-A `_CS` module holds only these wrappers and the specific update and delete actions below. Get actions (`GetCustomer`, `GetCustomerById`) belong in the `_BL` module (see `outsystems-action-flows`).
-
-### `_DeleteAll` (bulk delete)
-
-Create it only when a process needs to empty the table (sync reloads, test data, purges). It uses **one Advanced SQL node**, never a For Each over `Delete<Entity>`:
-
-```sql
-/* DeleteAllCustomer
-   Deletes every Customer record in a single statement.
-   Params: none */
-DELETE FROM
-	{Customer}
-```
-
-- Action `<Entity>_DeleteAll`, SQL node `DeleteAll<Entity>`, header comment, formatting per `outsystems-advanced-sql`.
-- A filtered bulk delete adds a `WHERE` clause with parameters and keeps the same names (`Customer_DeleteAll` with a `CountryId` input, for example).
-
-### Specific update and delete actions
-
-Besides the two wrappers, a `_CS` can hold **specific** update or delete actions on its own entities, when a process needs a narrower or bulk change than `_CreateOrUpdate`:
-
-| Action | Does | Implementation |
-|---|---|---|
-| `Invoice_UpdateStatus` | Changes one invoice's status (inputs `Id`, `InvoiceStatusId`) | `Get<Entity>ForUpdate` + `Update<Entity>`, update log fields set |
-| `Invoice_UpdateStatusAll` | Changes the status of every invoice that matches (inputs: filter, new status, `BatchSize`) | **One Advanced SQL node**, never a For Each |
-| `Invoice_DeleteAll` | Deletes every invoice, or every one that matches | One Advanced SQL node |
-
+**Specific update and delete actions** may sit in the same `_CS` when a process needs a narrower or bulk change: `Invoice_UpdateStatus`, `Invoice_UpdateStatusAll`, `Invoice_DeleteAll`.
 - Named `<Entity>_<Verb><What>`, with `All` at the end when it changes many rows.
-- Bulk actions are what timers call for set-based work; they take a `BatchSize` input when a timer runs them in batches (see `outsystems-timers`).
-- A bulk update sets `UpdatedOn` / `UpdatedBy` in the same statement.
-- Still no business process logic: they change data, the `_BL` or the timer decides when.
-
-Rules:
-- Do **not** create separate `_Create` / `_Update` wrappers; `_CreateOrUpdate` covers both.
-- The record input is always named **`Source`**. The identifier input is always named **`Id`**. Their data type makes the entity explicit, and every wrapper reads the same way.
-- Wrappers are `Public = Yes`; the built-in entity actions stay internal because the entity is read-only.
-- Never return `Success`/`ErrorMessage` output pairs. Raise a User Exception on failure (see `outsystems-action-flows`).
-- Every input and output has a Description.
+- A bulk action is **one Advanced SQL node**, never a For Each; it sets `UpdatedOn` / `UpdatedBy` in the same statement and takes a `BatchSize` input when a timer runs it in batches (see `outsystems-timers`).
+- `_DeleteAll` only when a process must empty the table (sync reloads, purges); SQL node `DeleteAll<Entity>` with a header comment, per `outsystems-advanced-sql`.
 
 ## `_CreateOrUpdate` flow
 
-The wrapper does **not** call the built-in `CreateOrUpdate<Entity>`. It has two separate branches so creation and update can set their log fields correctly:
+Diagram in [reference/flows.md](reference/flows.md#_createorupdate-flow).
 
-```
-Start
-  │
-Validate Source            (raise <Entity>ValidationException on failure)
-  │
-If  "Is existing record?"  Source.Id <> NullIdentifier()
-  ├── True  (update) ─────────────────────────────┐
-  │     Assign "Set update log fields"            │
-  │       Source.UpdatedOn = CurrDateTime()       │
-  │       Source.UpdatedBy = GetUserId()          │
-  │     Update<Entity>(Source)                    │
-  │     Assign Id = Source.Id                     │
-  │     End                                       │
-  └── False (create)                              │
-        Assign "Set create log fields"            │
-          Source.CreatedOn = CurrDateTime()       │
-          Source.CreatedBy = GetUserId()          │
-          Source.UpdatedOn = CurrDateTime()       │
-          Source.UpdatedBy = GetUserId()          │
-        Create<Entity>(Source)                    │
-        Assign Id = Create<Entity>.Id             │
-        End                                       │
-```
+- Validate `Source` first (raise `<Entity>ValidationException`).
+- Do **not** call the built-in `CreateOrUpdate<Entity>`: branch on `Source.Id <> NullIdentifier()` in an If labelled `Is existing record?`.
+- **Update** branch: set `UpdatedOn = CurrDateTime()`, `UpdatedBy = GetUserId()`, call `Update<Entity>`. Keep the original `CreatedOn` / `CreatedBy`: if `Source` may not carry them, read the record with `Get<Entity>ForUpdate` and copy them across.
+- **Create** branch: set `CreatedOn` / `CreatedBy` **and** `UpdatedOn` / `UpdatedBy` (same values), call `Create<Entity>`.
+- `Get<Entity>ForUpdate` output is reached through the entity name: `GetCustomerForUpdate.Record.Customer.CreatedOn`, not `GetCustomerForUpdate.Record.CreatedOn` (Service Studio reports "Can't identify 'CreatedOn' element").
+- Callers never set log fields; both branches return `Id`.
 
-Rules:
-- The check is always `Source.Id <> NullIdentifier()`, in an If labelled `Is existing record?`.
-- **On creation, `UpdatedOn` / `UpdatedBy` are set too**, with the same values as `CreatedOn` / `CreatedBy`. Log fields are never left empty.
-- On update, `CreatedOn` / `CreatedBy` must keep their original values. If `Source` may not carry them, read the record with `Get<Entity>ForUpdate` and copy them across before calling `Update<Entity>`.
-- The output of `Get<Entity>ForUpdate` is reached through the entity name: `GetCustomerForUpdate.Record.Customer.CreatedOn`, not `GetCustomerForUpdate.Record.CreatedOn` (Service Studio reports "Can't identify 'CreatedOn' element").
-- Callers never set log fields; the wrapper always overwrites them.
-- Both branches return `Id`.
-
-No business process logic in wrappers. Orchestration across entities belongs in `_BL`.
-
-## Standard entity attributes
+## Attributes
 
 | Attribute | Type | Notes |
 |---|---|---|
 | `Id` | Long Integer (auto-number) | Default identifier |
 | `IsActive` | Boolean | Default `True` |
-| `CreatedOn` / `UpdatedOn` | Date Time | Set by wrapper; both filled on create |
-| `CreatedBy` / `UpdatedBy` | User Identifier | Set by wrapper; both filled on create |
+| `CreatedOn` / `UpdatedOn` | Date Time | Set by the wrapper; both filled on create |
+| `CreatedBy` / `UpdatedBy` | User Identifier | Set by the wrapper; both filled on create |
 
-## Attribute naming
-
-1. Attribute names are **CamelCase and singular**, like entity names: `Name`, `CreatedOn`, `PhoneNumber`.
-2. Booleans start with `Is` or `Has`: `IsActive`, `IsInvalid`, `HasAttachment`.
-3. Foreign keys are `<ReferencedEntity>Id`: `CustomerId`, `StructureId`.
-4. No abbreviations, no underscores, no entity-name prefix (`Name`, not `CustomerName` inside `Customer`).
-
-| Good | Bad | Why |
-|---|---|---|
-| `PhoneNumber` | `PhoneNumbers`, `phone_number`, `PhoneNr` | Singular, CamelCase, no abbreviation |
-| `Tag` | `Tags` | Singular (a list of values belongs in its own entity) |
-| `IsDeleted` | `Deleted`, `DelFlag` | Booleans start with Is/Has |
-| `CustomerId` | `Customer`, `IdCustomer`, `Customer_Id` | Foreign key pattern |
-
-Index every foreign key and every attribute used in frequent filters.
+- CamelCase and singular (`PhoneNumber`, `Tag`); a list of values is its own entity.
+- Booleans start with `Is` / `Has`; foreign keys are `<ReferencedEntity>Id`.
+- No abbreviations, underscores or entity-name prefix (`Name`, not `CustomerName` inside `Customer`).
+- Index every foreign key and every attribute used in frequent filters.

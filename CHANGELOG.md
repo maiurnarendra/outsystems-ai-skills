@@ -2,6 +2,16 @@
 
 All notable changes to this project are documented here. Versions follow [semantic versioning](https://semver.org/).
 
+## [0.14.1] - 2026-11-13
+
+The three skills still over the 8 KB budget, split the same way as in 0.14.0. No rule changed.
+
+### Changed
+- `outsystems-crud-conventions` (9.5 KB → 5.0 KB): rules stay in `SKILL.md`; good/bad naming tables in `reference/examples.md`; the `_CreateOrUpdate` flow, `_DeleteAll` SQL and specific-action examples in `reference/flows.md`.
+- `outsystems-code-review` (10.3 KB → 6.7 KB): steps, verdict table and rules stay; tools per element, large elements, following events and live-model checks in `reference/collecting.md`; the full report example in `reference/report.md`.
+- `outsystems-data-model` (10.4 KB → 6.1 KB): context, interview rules and a one-line rule per decision stay; decision tables, tests and examples in `reference/decisions.md`; proposal and glossary templates in `reference/output.md`.
+- Every `SKILL.md` is now under the 8 KB budget; `validate.ps1` reports no warnings.
+
 ## [0.14.0] - 2026-11-13
 
 Lighter skills, same rules. Based on a token-usage analysis by a colleague.
