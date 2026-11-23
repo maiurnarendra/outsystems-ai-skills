@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented here. Versions follow [semantic versioning](https://semver.org/).
 
+## [0.15.0] - 2026-11-23
+
+### Added
+- **English only.** Whatever language the user writes in, everything in the model is in English: module, action, entity, attribute, structure, variable, parameter, node label and folder names, SQL aliases, comments, Descriptions and `TODO:` notes. The agent replies in the user's language. Text shown to end users and static entity `Label` values follow the application's language. Rule owned by `outsystems-action-flows`, with pointers in `crud-conventions`, `advanced-sql` and `module-naming`.
+- Checklist item in `outsystems-standards-review`, `AGENTS.md` non-negotiable 3, and eval scenario `action-flow-08` (a prompt in Portuguese).
+
 ## [0.14.1] - 2026-11-13
 
 The three skills still over the 8 KB budget, split the same way as in 0.14.0. No rule changed.

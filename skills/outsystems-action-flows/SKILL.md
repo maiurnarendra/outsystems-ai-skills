@@ -7,6 +7,16 @@ description: Standards for OutSystems action logic (Server, Client and Service A
 
 Core rules. Diagrams, full label tables and examples are in [reference/layout.md](reference/layout.md); built-in function and JavaScript examples in [reference/builtins.md](reference/builtins.md). Open them when drawing a flow or when a rule below is unclear.
 
+## Language: English only
+
+Whatever language the user writes in, everything in the model is in **English**: module, action, entity, attribute, structure, variable, parameter, node label and folder names, SQL aliases, comments, Descriptions and `TODO:` notes. Reply to the user in their language; write the code in English.
+
+| User asks (Portuguese) | Good | Bad |
+|---|---|---|
+| "Cria a ação que aprova a fatura" | `ApproveInvoice`, If `Is invoice pending?`, comment "Only pending invoices can be approved" | `AprovarFatura`, If `Fatura pendente?`, comment "Só faturas pendentes" |
+
+Not covered: text **shown to end users** (labels, messages, e-mail content), which follows the application's language and translations, and static entity `Label` values. Their identifiers and record names stay in English.
+
 ## Naming
 
 - Actions: CamelCase verb + noun, **always singular**: `CalculateOrderTotal`, `GetStructure` (never `GetStructures`).

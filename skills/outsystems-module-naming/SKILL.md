@@ -13,7 +13,7 @@ Every module name tells the reader two things: **which business domain** it belo
 <Domain>[<SubDomain>]_<Suffix>
 ```
 
-- `Domain` is CamelCase, singular, business-meaningful: `Customer`, `Order`, `Invoice`. Never technical words like `Common`, `Utils`, `Misc`, `Stuff`.
+- `Domain` is CamelCase, singular, business-meaningful and **in English**: `Customer`, `Order`, `Invoice` (not `Cliente_CS`). Never technical words like `Common`, `Utils`, `Misc`, `Stuff`.
 - No spaces, no hyphens, no version numbers (`Customer2_CS` is wrong; version through LifeTime/ODC, not names).
 - An optional company or product prefix is allowed when the factory is shared: `ACME_Customer_CS`. Pick one rule per factory and apply it everywhere.
 

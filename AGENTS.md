@@ -21,7 +21,7 @@ Non-negotiables, even if you read nothing else (the rules agents break most; the
 
 1. **Modules:** every module has a layer suffix (`_CS`, `_BL`, `_Eng`, `_CW`, `_FS`, `_IS`, `_Lib`, `_TH`; a leading `M` means mobile). No upward references, no references between End-user modules; in Core `_CW` / `_Eng` → `_BL` → `_CS`.
 2. **`_CS`:** entities (`Public = Yes`, `Expose Read Only = Yes`), `<Entity>_CreateOrUpdate` (input `Source`, output `Id`), `<Entity>_Delete` (input `Id`) and specific update/delete actions on its own entities, bulk ones as one Advanced SQL node. Get actions go in `_BL`.
-3. **Names:** CamelCase and singular (`GetStructure`, never `GetStructures`); `_` in entity names only for many-to-many (`User_Role`); Booleans start with `Is` / `Has`.
+3. **Names:** in **English**, whatever language the user writes in (names, labels, comments, Descriptions, SQL aliases; end-user text excepted); CamelCase and singular (`GetStructure`, never `GetStructures`); `_` in entity names only for many-to-many (`User_Role`); Booleans start with `Is` / `Has`.
 4. **Flows:** top to bottom; If True down, False right; For Each Cycle to the right; straight connectors (`Dummy` Assigns for routing); never `not`; no default labels (`If1`); Descriptions on public actions, inputs and outputs.
 5. **Built-ins first:** expressions and list actions (`ListAny`, `ListIndexOf`, `ListFilter`) before a For Each with an If; JavaScript only for what OutSystems can't do.
 6. **SQL:** uppercase clauses at the left margin, TAB indentation, leading commas, explicit `INNER JOIN`, `{Entity}.[Attribute]`, no unsanitised Expand Inline.

@@ -31,6 +31,9 @@ To review the code changed for a work item against both the standards and its ac
 - [ ] Get actions live in `_BL`, not in `_CS` or `_CW`
 - [ ] `_FS` modules have no entities with data and no Core references
 
+**Language**
+- [ ] Names, labels, comments, Descriptions and SQL aliases in English (end-user text excepted)
+
 **Actions**
 - [ ] Verb + noun CamelCase names, singular (`GetStructure`, `GetStructureById`, not `GetStructures`)
 - [ ] Every If labelled as a question or a Boolean name (`Is`/`Has`); every Switch labelled; no default `If1`/`Assign1` labels

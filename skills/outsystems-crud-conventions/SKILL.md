@@ -9,6 +9,7 @@ Core rules. Good/bad naming tables are in [reference/examples.md](reference/exam
 
 ## Entity naming
 
+- **English names** for entities, attributes, static entity records and `_CS` actions, whatever language the user writes in (see `outsystems-action-flows`, "Language: English only").
 - **CamelCase, starting uppercase, singular**: `Customer`, `CustomerAddress`, `OrderLine`. No plurals, abbreviations or technical prefixes (`Customers`, `tbl_Customer`, `Cust`).
 - **Many-to-many** entities join both names with `_`: `User_Role`, `Product_Category`.
 - **`_` means many-to-many only.** Never project prefixes like `Sales_Customer`: it reads as a junction between `Sales` and `Customer`. The module already says which project it belongs to.

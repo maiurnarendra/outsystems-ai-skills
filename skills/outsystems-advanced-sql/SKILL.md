@@ -58,6 +58,8 @@ ORDER BY
 
 ## Header comment (mandatory)
 
+Header comments, inline comments and aliases are written in **English**, whatever language the user writes in.
+
 Every SQL node starts with a block comment: query name, one-line purpose, parameters. Explain any non-obvious join or filter inline with `--`.
 
 ## Node and parameter naming
