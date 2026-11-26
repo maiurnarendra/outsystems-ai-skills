@@ -12,6 +12,7 @@ When you create, modify or review OutSystems code (O11 or ODC), follow the stand
 | SQL nodes | `skills/outsystems-advanced-sql/SKILL.md` |
 | Consuming an external API or service, `_IS` modules | `skills/outsystems-integrations/SKILL.md` |
 | A story needs scheduled, batch or long-running work; creating or reviewing a timer | `skills/outsystems-timers/SKILL.md` |
+| Reading or editing modules through the Service Studio MCP; a module the task needs is not open | `skills/outsystems-module-access/SKILL.md` |
 | Reviewing existing code | `skills/outsystems-standards-review/SKILL.md` |
 | Diagnosing a bug: runtime error, slow screen or query, front-end / JavaScript issue | `skills/outsystems-debugging/SKILL.md` (user-invoked) |
 | Code review of a work item (Standards + Spec, read live through the Service Studio MCP) | `skills/outsystems-code-review/SKILL.md` (user-invoked) |
@@ -27,4 +28,5 @@ Non-negotiables, even if you read nothing else (the rules agents break most; the
 6. **SQL:** uppercase clauses at the left margin, TAB indentation, leading commas, explicit `INNER JOIN`, `{Entity}.[Attribute]`, no unsanitised Expand Inline.
 7. **Integrations:** one `_IS` per system, returning the team's own structure with only the attributes needed; external errors become User Exceptions.
 8. **Timers:** recurrent in `_BL` (or `_Eng`), one-off in the Timer Engine app; long-running ones wake before the timeout, commit per record and keep a checkpoint and kill switch.
-9. **Deployments:** never to Pre-Production or Production, never started without the user's confirmation, never print the LifeTime token.
+9. **Modules you can't see:** the Service Studio MCP reads only modules open in Service Studio and can't open one. Ask the user once for the missing modules (why, read or edit) and never guess what's inside a module you couldn't read.
+10. **Deployments:** never to Pre-Production or Production, never started without the user's confirmation, never print the LifeTime token.

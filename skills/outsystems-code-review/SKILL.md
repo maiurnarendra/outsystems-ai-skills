@@ -25,7 +25,7 @@ Keep the axes independent: a flow can follow every naming rule and still miss an
 
 - The **Service Studio MCP** (`servicestudio`) connected, with the modules open in Service Studio. If its tools are missing or refuse the connection, say so and stop; offer `outsystems-standards-review` on pasted code instead.
 - One session token from `createSessionToken`, reused on every call. The call waits for the user to approve a Service Studio dialog: tell them to watch for it **before** calling; if it times out, ask them to approve and call once more.
-- `listApps`, and use the module names it returns exactly as `eSpaceName`.
+- `listApps`, and use the module names it returns exactly as `eSpaceName`. If a module in scope isn't open, ask for it as `outsystems-module-access` describes: one request, read-only.
 
 ## 1. Fix the scope
 

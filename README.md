@@ -27,7 +27,7 @@ This repository is about **OutSystems knowledge**: what good OutSystems code loo
 
 | Aspect | Details |
 | --- | --- |
-| **Type** | Eight standards skills that are content only (Markdown, nothing runs), one data-model design skill, `outsystems-data-model`, that interviews you before entities are built, one debugging skill, `outsystems-debugging`, that diagnoses errors, slowness and front-end issues read-only, one code-review skill, `outsystems-code-review`, that reads your modules through the Service Studio MCP without changing them, and one deployment skill, `outsystems-lifetime-deploy`, that calls the LifeTime API with a small PowerShell script, only when you use it. |
+| **Type** | Eight standards skills that are content only (Markdown, nothing runs), one data-model design skill, `outsystems-data-model`, that interviews you before entities are built, one debugging skill, `outsystems-debugging`, that diagnoses errors, slowness and front-end issues read-only, one code-review skill, `outsystems-code-review`, that reads your modules through the Service Studio MCP without changing them, one module-access skill, `outsystems-module-access`, that asks you for the modules the agent needs open, and one deployment skill, `outsystems-lifetime-deploy`, that calls the LifeTime API with a small PowerShell script, only when you use it. |
 | **Platforms** | OutSystems 11 and OutSystems Developer Cloud (ODC). |
 | **Works with** | Claude Code (plugin or skill install), Google Antigravity, GitHub Copilot, Cursor, Kiro, Codex CLI. |
 | **Pairs with** | Any OutSystems MCP server: the MCP gives the agent access to your app, these skills govern what it writes. Also useful on its own for design and review conversations. |
@@ -40,7 +40,7 @@ The skills come in three kinds:
 
 - **Standards**: the rulebook. What good OutSystems code looks like. Applied automatically whenever the agent writes or reviews code.
 - **Practices**: how a senior OutSystems developer works, applying the standards. Run only when you ask for them.
-- **Tooling**: automates a routine task. Runs only when you ask for it.
+- **Tooling**: helps the agent work with your OutSystems tools (Service Studio, LifeTime).
 
 ### Standards
 
@@ -67,6 +67,7 @@ The skills come in three kinds:
 
 | Skill | What the agent will do |
 | --- | --- |
+| [**Module access**](skills/outsystems-module-access/SKILL.md) | The Service Studio MCP only sees modules open in Service Studio, and nothing can open one for the agent. So before reading or editing, the agent checks what's open, works out exactly which modules the task needs (the owning `_CS`, the `_BL`, the end-user module, the `_IS`) and asks you **once** for the missing ones, saying why and whether it will read or edit each. It never guesses what's inside a module it couldn't read. Applied automatically. |
 | [**LifeTime deploy**](skills/outsystems-lifetime-deploy/SKILL.md) | Read the work items that are ready for test from your tracker (Jira, Azure DevOps, GitHub Issues or none), find the modules in their comments, tag the changed apps and create **one** LifeTime deployment plan with the item keys as notes. Starts it only when you confirm. Tracker, environments and any after-deploy status/assignee changes come from your own config file. Runs only when you ask for it. |
 
 ### What you can ask
@@ -105,6 +106,7 @@ outsystems-ai-skills/
 │  ├─ outsystems-standards-review/SKILL.md  # review checklist and report
 │  ├─ outsystems-code-review/               # work item review, Standards + Spec: SKILL.md + reference/ (collecting, report)
 │  ├─ outsystems-debugging/                 # root cause first: SKILL.md + reference/ (runtime errors, performance, front-end)
+│  ├─ outsystems-module-access/SKILL.md     # ask once for the modules that aren't open in Service Studio
 │  └─ outsystems-lifetime-deploy/           # work items → LifeTime plan (SKILL.md, config.example.json, reference/, scripts/)
 ├─ evals/
 │  ├─ README.md                             # how to test the skills

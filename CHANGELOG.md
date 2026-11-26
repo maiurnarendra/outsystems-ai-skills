@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented here. Versions follow [semantic versioning](https://semver.org/).
 
+## [0.16.0] - 2026-11-26
+
+### Added
+- **`outsystems-module-access`.** The Service Studio MCP only sees modules open in Service Studio, and neither it nor the LifeTime API can open one. Before reading or editing, the agent checks `listApps`, works out exactly which modules the task needs (owning `_CS`, `_BL`, end-user module, `_IS`, timer module), and asks the user once for the missing ones, with the reason and read or edit for each. It never guesses what's inside a module it couldn't read and never edits a module it was given to read.
+- Pointers in `outsystems-code-review` and `outsystems-debugging`, `AGENTS.md` non-negotiable 9, Copilot instructions, README (Tooling) and eval scenarios `module-access-01` and `module-access-02`.
+
 ## [0.15.0] - 2026-11-23
 
 ### Added

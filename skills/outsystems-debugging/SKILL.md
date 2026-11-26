@@ -42,7 +42,7 @@ No message and no reproduction steps → ask for them before forming any theory.
 | **Integrations** log | Request, response, status and duration of each `_IS` call | Same |
 | Screen requests / ODC traces | Duration of each server call from a screen | Same |
 | **Browser** DevTools: Console, Network, Performance | JavaScript errors, failing or slow requests, long tasks | Ask the user, or a browser tool on a **Development** environment where the user is already signed in |
-| **The model** (Service Studio MCP, read-only) | The flow, block, SQL or JavaScript node involved | `getServerAction`, `getClientAction`, `getWebBlock`, `getScreen`, `getDataModel`, `getValidationMessages` |
+| **The model** (Service Studio MCP, read-only; missing modules per `outsystems-module-access`) | The flow, block, SQL or JavaScript node involved | `getServerAction`, `getClientAction`, `getWebBlock`, `getScreen`, `getDataModel`, `getValidationMessages` |
 | Recent changes | What was deployed or merged lately | LifeTime deployment history, the work item, the developer |
 
 - Logs and screenshots may contain personal data: quote only what the diagnosis needs, and never copy production data into files, tickets or the repository.

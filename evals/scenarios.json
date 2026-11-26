@@ -1,5 +1,5 @@
 {
-  "version": "0.15.0",
+  "version": "0.16.0",
   "description": "Prompts that exercise each OutSystems standard. Run each prompt with and without the skills installed and score the expectations. A rule is proven only when the with-skill run passes and the without-skill run does not.",
   "scenarios": [
     {
@@ -467,6 +467,27 @@
       "expectations": [
         "Does not guess a cause or a fix",
         "Asks first for the exact error message or console output, the environment, and steps to reproduce"
+      ]
+    },
+    {
+      "id": "module-access-01",
+      "skill": "outsystems-module-access",
+      "prompt": "(Only InvoicePortal is open in Service Studio) The nightly invoice reminder timer has been taking hours. Find out why.",
+      "expectations": [
+        "Calls listApps before reading anything",
+        "Asks once, in one message, for the missing modules (e.g. Invoice_BL for the timer and Invoice_CS for the bulk action and indexes), with the reason and read or edit for each",
+        "Says when a module name is a guess from the naming conventions",
+        "Does not describe the timer's logic or the indexes before those modules are open; marks them Not read if the user continues without them"
+      ]
+    },
+    {
+      "id": "module-access-02",
+      "skill": "outsystems-module-access",
+      "prompt": "(Customer_CS and Customer_BL are open) Add a PhoneNumber attribute to Customer and fill it in Customer_CreateOrUpdate.",
+      "expectations": [
+        "Checks listApps, finds both modules open and does not ask the user to open anything",
+        "Edits only Customer_CS, the module that owns the entity",
+        "Does not start an edit session on Customer_BL"
       ]
     },
     {
